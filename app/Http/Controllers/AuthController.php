@@ -12,20 +12,35 @@ use Illuminate\View\View;
 
 class AuthController extends Controller
 {
-    private const PERAN_DITERIMA = ['buyer', 'seller', 'pembeli', 'penjual'];
+    /**
+     * Peran yang boleh dipilih saat pendaftaran publik.
+     * Peran admin hanya bisa dibuat lewat perintah `php artisan admin:create`.
+     */
+    private const PERAN_DITERIMA = [User::ROLE_BUYER, User::ROLE_SELLER];
+
+    /**
+     * Alias bahasa Indonesia untuk peran, dipakai form pendaftaran lama.
+     */
+    private const ALIAS_PERAN = [
+        'pembeli' => User::ROLE_BUYER,
+        'penjual' => User::ROLE_SELLER,
+    ];
 
     public function showRegister(): View
     {
-        return $this->halaman('guest.register', [
+        return view('auth.daftar', [
             'title' => 'Daftar Akun',
-            'mobileTitle' => 'Daftar Akun',
-            'active' => 'profil',
-            'context' => 'Daftar akun baru untuk mulai belanja dengan suara',
         ]);
     }
 
     public function register(Request $request): RedirectResponse
     {
+        if ($request->filled('role')) {
+            $request->merge([
+                'role' => self::ALIAS_PERAN[$request->input('role')] ?? $request->input('role'),
+            ]);
+        }
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
@@ -60,11 +75,8 @@ class AuthController extends Controller
 
     public function showLogin(): View
     {
-        return $this->halaman('guest.login', [
+        return view('auth.masuk', [
             'title' => 'Masuk',
-            'mobileTitle' => 'Masuk',
-            'active' => 'profil',
-            'context' => 'Masuk untuk melanjutkan',
         ]);
     }
 
@@ -80,9 +92,20 @@ class AuthController extends Controller
         ]);
 
         if (! Auth::attempt(['email' => $data['email'], 'password' => $data['password']], $request->boolean('remember'))) {
-            return back()
+            return redirect()->route($this->halamanMasuk($request))
                 ->withInput($request->only('email'))
                 ->withErrors(['email' => 'Email atau kata sandi salah.']);
+        }
+
+        if (! $request->user()->isActive()) {
+            Auth::logout();
+
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route($this->halamanMasuk($request))
+                ->withInput($request->only('email'))
+                ->withErrors(['email' => 'Akun Anda dinonaktifkan. Silakan hubungi admin.']);
         }
 
         $request->session()->regenerate();
@@ -102,15 +125,28 @@ class AuthController extends Controller
             ->with('status', 'Anda telah keluar.');
     }
 
+    /**
+     * Halaman masuk yang dipakai untuk mengembalikan galat, sesuai alias yang
+     * sedang dibuka pengguna (/masuk atau /login).
+     */
+    private function halamanMasuk(Request $request): string
+    {
+        $referer = (string) $request->headers->get('referer');
+
+        return str_contains($referer, '/masuk') ? 'login.masuk' : 'login';
+    }
+
     private function normalisasiPeran(string $role): string
     {
-        return in_array($role, [User::ROLE_SELLER, 'penjual'], true)
-            ? User::ROLE_SELLER
-            : User::ROLE_BUYER;
+        return in_array($role, self::PERAN_DITERIMA, true) ? $role : User::ROLE_BUYER;
     }
 
     private function tujuanPeran(string $role): string
     {
-        return $role === User::ROLE_SELLER ? 'seller.dashboard' : 'beranda';
+        return match ($role) {
+            User::ROLE_SELLER => 'seller.dashboard',
+            User::ROLE_ADMIN => 'admin.dashboard',
+            default => 'beranda',
+        };
     }
 }

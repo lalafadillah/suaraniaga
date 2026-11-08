@@ -23,7 +23,13 @@ class User extends Authenticatable
 
     public const ROLE_SELLER = 'seller';
 
-    public const ROLES = [self::ROLE_BUYER, self::ROLE_SELLER];
+    public const ROLE_ADMIN = 'admin';
+
+    public const ROLES = [self::ROLE_BUYER, self::ROLE_SELLER, self::ROLE_ADMIN];
+
+    protected $attributes = [
+        'is_active' => true,
+    ];
 
     /**
      * Get the attributes that should be cast.
@@ -35,6 +41,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
 
@@ -51,6 +58,16 @@ class User extends Authenticatable
     public function isSeller(): bool
     {
         return $this->role === self::ROLE_SELLER;
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isActive(): bool
+    {
+        return (bool) $this->is_active;
     }
 
     /**

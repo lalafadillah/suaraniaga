@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AkunController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\HalamanController;
@@ -21,12 +23,23 @@ Route::middleware('guest')->group(function () {
     Route::post('/register', [AuthController::class, 'register'])->name('register.store');
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('/login', [AuthController::class, 'login'])->name('login.store');
+
+    // Alias path yang sama dengan halaman frontend (masuk, daftar).
+    Route::get('/masuk', [AuthController::class, 'showLogin'])->name('login.masuk');
+    Route::post('/masuk', [AuthController::class, 'login'])->name('login.masuk.store');
+    Route::get('/daftar', [AuthController::class, 'showRegister'])->name('register.daftar');
+    Route::post('/daftar', [AuthController::class, 'register'])->name('register.daftar.store');
 });
 
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/keluar', [AuthController::class, 'logout'])->name('logout.keluar');
 
-    Route::get('/profil', [HalamanController::class, 'profil'])->name('profil');
+    Route::get('/profil', [AkunController::class, 'index'])->name('profil');
+    Route::get('/akun', [AkunController::class, 'index'])->name('akun');
+    Route::patch('/akun', [AkunController::class, 'update'])->name('akun.update');
+    Route::patch('/akun/sandi', [AkunController::class, 'updatePassword'])->name('akun.sandi');
+    Route::delete('/akun', [AkunController::class, 'destroy'])->name('akun.hapus');
     Route::get('/pengaturan', [HalamanController::class, 'pengaturan'])->name('pengaturan');
 
     Route::middleware('role:buyer')->group(function () {
@@ -56,5 +69,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/seller/products', [SellerController::class, 'storeProduct'])->name('seller.products.store');
         Route::get('/seller/orders', [SellerController::class, 'pesanan'])->name('seller.orders.index');
         Route::patch('/seller/orders/{order}/status', [SellerController::class, 'updateOrderStatus'])->name('seller.orders.status');
+    });
+
+    Route::middleware('role:admin')->group(function () {
+        Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+        Route::patch('/admin/users/{user}/status', [AdminController::class, 'updateUserStatus'])->name('admin.users.status');
+        Route::get('/admin/products', [AdminController::class, 'products'])->name('admin.products');
+        Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');
     });
 });
