@@ -1,10 +1,27 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+<<<<<<< HEAD
+=======
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SellerController;
+>>>>>>> 62399c56dc0e9edfeac77b91d7f572045a1bdf2b
 use Illuminate\Support\Facades\Route;
+
+/* Auth session buatan sendiri */
+
+Route::middleware('guest')->group(function () {
+    Route::view('/masuk', 'auth.masuk', ['title' => 'Masuk'])->name('login');
+    Route::view('/daftar', 'auth.daftar', ['title' => 'Daftar'])->name('register');
+
+    Route::post('/masuk', [AuthController::class, 'login'])->name('login.store');
+    Route::post('/daftar', [AuthController::class, 'register'])->name('register.store');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::post('/keluar', [AuthController::class, 'logout'])->name('logout');
+});
 
 Route::view('/', 'beranda', [
     'title' => 'Beranda',

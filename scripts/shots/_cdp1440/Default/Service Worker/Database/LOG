@@ -1,3 +1,2 @@
-2026/11/08-10:10:18.687 57c8 Reusing MANIFEST C:\laragon\www\hekton\suaraniaga\scripts\shots\_cdp1440\Default\Service Worker\Database/MANIFEST-000001
-2026/11/08-10:10:18.687 57c8 Recovering log #3
-2026/11/08-10:10:18.687 57c8 Reusing old log C:\laragon\www\hekton\suaraniaga\scripts\shots\_cdp1440\Default\Service Worker\Database/000003.log 
+2026/11/08-12:06:35.841 3504 Creating DB C:\laragon\www\hekton\suaraniaga\scripts\shots\_cdp1440\Default\Service Worker\Database since it was missing.
+2026/11/08-12:06:35.847 3504 Reusing MANIFEST C:\laragon\www\hekton\suaraniaga\scripts\shots\_cdp1440\Default\Service Worker\Database/MANIFEST-000001

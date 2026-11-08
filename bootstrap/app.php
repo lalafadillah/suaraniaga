@@ -15,8 +15,16 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
+<<<<<<< HEAD
+            'role' => \App\Http\Middleware\EnsureUserHasRole::class,
+        ]);
+
+        $middleware->redirectGuestsTo(fn () => route('login'));
+        $middleware->redirectUsersTo(fn () => route('beranda'));
+=======
             'role' => EnsureUserRole::class,
         ]);
+>>>>>>> 62399c56dc0e9edfeac77b91d7f572045a1bdf2b
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

@@ -12,5 +12,16 @@
         <span>{{ $mode }}</span>
         <span aria-hidden="true" class="text-muted">•</span>
         <a href="{{ route('pengaturan') }}" class="rounded text-brand underline-offset-4 hover:underline">Bantuan</a>
+
+        @auth
+            <span aria-hidden="true" class="text-muted">•</span>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="rounded text-brand underline-offset-4 hover:underline">Keluar</button>
+            </form>
+        @else
+            <span aria-hidden="true" class="text-muted">•</span>
+            <a href="{{ route('login') }}" class="rounded text-brand underline-offset-4 hover:underline">Masuk</a>
+        @endauth
     </div>
 </header>

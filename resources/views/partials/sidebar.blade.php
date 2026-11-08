@@ -38,6 +38,24 @@
 
     <div class="px-6 pb-9">
         <hr class="mb-5 border-line">
+
+        @auth
+            <p class="text-[13px] font-semibold text-ink">{{ auth()->user()->name }}</p>
+            <form method="POST" action="{{ route('logout') }}" class="mt-3">
+                @csrf
+                <button type="submit" class="text-[13px] font-semibold text-brand underline-offset-4 hover:underline">
+                    Keluar
+                </button>
+            </form>
+        @else
+            <a href="{{ route('login') }}" class="text-[13px] font-semibold text-brand underline-offset-4 hover:underline">
+                Masuk atau daftar
+            </a>
+        @endauth
+    </div>
+
+    <div class="px-6 pb-9">
+        <hr class="mb-5 border-line">
         <h2 class="text-[13px] font-semibold text-ink">Navigasi keyboard</h2>
         <p class="mt-1.5 text-xs leading-relaxed text-muted">
             Tekan Tab untuk berpindah. Pembaca layar akan membacakan nama elemen.

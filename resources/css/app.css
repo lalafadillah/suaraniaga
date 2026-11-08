@@ -22,6 +22,8 @@
     --color-success-soft: #e8f5ef;
     --color-amber-soft: #fff4e3;
     --color-focus: #d97706;
+    --color-danger: #a3231b;
+    --color-danger-soft: #fdeeed;
 
     /* Skala teks dari desain, satuan rem agar mengikuti skala aksesibilitas */
     --text-13: 0.8125rem;
@@ -62,6 +64,8 @@
         --color-success: #0c5c3f;
         --color-success-soft: #d8f0e4;
         --color-amber-soft: #fff0d4;
+        --color-danger: #7d1216;
+        --color-danger-soft: #ffe6e4;
     }
 
     body {
@@ -119,6 +123,27 @@
         background: var(--color-brand-soft);
         color: var(--color-brand);
         font-weight: 600;
+    }
+
+    /* Kolom isian: tinggi sentuh besar, kontras border jelas */
+    .field {
+        width: 100%;
+        height: 3.375rem;
+        border-radius: 0.625rem;
+        border: 1px solid var(--color-line-strong);
+        background-color: var(--color-surface);
+        padding: 0 1rem;
+        font-size: 1rem;
+        color: var(--color-ink);
+    }
+
+    .field::placeholder {
+        color: var(--color-muted);
+    }
+
+    .field[aria-invalid='true'] {
+        border-color: var(--color-danger);
+        background-color: var(--color-danger-soft);
     }
 
     /* Mengurangi animasi sesuai pengaturan aksesibilitas */

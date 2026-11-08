@@ -62,11 +62,17 @@ const child = spawn(chrome, [
     await send('Page.navigate', { url });
     await new Promise((r) => setTimeout(r, 2500));
 
-    const expr = fs.readFileSync(path.join(__dirname, 'probe.js'), 'utf8');
+    const expr = fs.readFileSync(path.join(__dirname, process.argv[5] || 'probe.js'), 'utf8');
     await send('Runtime.evaluate', { expression: expr, returnByValue: true });
     await new Promise((r) => setTimeout(r, 2000));
+
+    const setelah = process.argv[6];
+    const expr2 = setelah
+        ? fs.readFileSync(path.join(__dirname, setelah), 'utf8')
+        : 'JSON.stringify(window.__probeResult ?? null, null, 2)';
+
     const res = await send('Runtime.evaluate', {
-        expression: 'JSON.stringify(window.__probeResult ?? null, null, 2)',
+        expression: expr2,
         returnByValue: true,
     });
     console.log(res.result?.result?.value ?? JSON.stringify(res.result, null, 2));
