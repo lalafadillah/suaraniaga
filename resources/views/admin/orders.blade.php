@@ -6,7 +6,6 @@
         description="Semua pesanan yang masuk, dari pembeli, penjual, sampai status pengiriman."
     />
 
-    @include('admin.navigasi')
 
     <form method="GET" action="{{ route('admin.orders') }}" class="mb-6 rounded-card border border-line bg-surface p-6">
         <div>

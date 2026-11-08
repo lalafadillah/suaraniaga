@@ -6,8 +6,6 @@
         description="Daftar akun pembeli dan penjual. Akun yang dinonaktifkan tidak bisa masuk lagi."
     />
 
-    @include('admin.navigasi')
-
     @if (session('status'))
         <p role="status" class="mb-6 rounded-card border border-line bg-surface px-5 py-4 text-[15px] text-ink">
             {{ session('status') }}

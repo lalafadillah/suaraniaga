@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
 
     public const BUYER_EMAIL = 'buyer@suaraniaga.test';
 
+    public const ADMIN_EMAIL = 'admin@suaraniaga.test';
+
     public const PASSWORD = 'password123';
 
     public function run(): void
@@ -35,6 +37,11 @@ class DatabaseSeeder extends Seeder
         $buyer = User::firstOrCreate(
             ['email' => self::BUYER_EMAIL],
             ['name' => 'Budi Pembeli', 'password' => self::PASSWORD, 'role' => User::ROLE_BUYER]
+        );
+
+        User::firstOrCreate(
+            ['email' => self::ADMIN_EMAIL],
+            ['name' => 'Admin SuaraNiaga', 'password' => self::PASSWORD, 'role' => User::ROLE_ADMIN]
         );
 
         $produk = config('suaranniaga.produk', []);

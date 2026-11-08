@@ -1,19 +1,26 @@
 @php
     $role = $role ?? 'pembeli';
 
-    $menu = $role === 'penjual'
-        ? [
+    $menu = match ($role) {
+        'admin' => [
+            ['key' => 'admin-dashboard', 'label' => 'Ringkasan', 'route' => 'admin.dashboard'],
+            ['key' => 'admin-pengguna', 'label' => 'Pengguna', 'route' => 'admin.users'],
+            ['key' => 'admin-produk', 'label' => 'Produk', 'route' => 'admin.products'],
+            ['key' => 'admin-pesanan', 'label' => 'Pesanan', 'route' => 'admin.orders'],
+        ],
+        'penjual' => [
             ['key' => 'ringkasan', 'label' => 'Ringkasan', 'route' => 'penjual.dashboard'],
             ['key' => 'produk', 'label' => 'Produk', 'route' => 'penjual.produk'],
             ['key' => 'pesanan-masuk', 'label' => 'Pesanan', 'route' => 'penjual.pesanan'],
             ['key' => 'toko', 'label' => 'Toko', 'route' => 'penjual.toko'],
-        ]
-        : [
+        ],
+        default => [
             ['key' => 'beranda', 'label' => 'Beranda', 'route' => 'beranda'],
             ['key' => 'cari', 'label' => 'Cari', 'route' => 'cari'],
             ['key' => 'keranjang', 'label' => 'Keranjang', 'route' => 'keranjang'],
             ['key' => 'profil', 'label' => 'Profil', 'route' => 'profil'],
-        ];
+        ],
+    };
 
     $current = $active ?? 'beranda';
 @endphp

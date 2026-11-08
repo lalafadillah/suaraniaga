@@ -6,7 +6,6 @@
         description="Semua produk yang terdaftar, lengkap dengan deskripsi audio untuk pemeriksaan admin."
     />
 
-    @include('admin.navigasi')
 
     <form method="GET" action="{{ route('admin.products') }}" class="mb-6 rounded-card border border-line bg-surface p-6">
         <div>

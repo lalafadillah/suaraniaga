@@ -13,8 +13,10 @@
          Tanpa ini halaman masuk akan 500 saat `npm run build` belum dijalankan. --}}
     @php
         $manifestAuth = public_path('build/manifest.json');
+        $isiManifest = file_exists($manifestAuth) ? (string) file_get_contents($manifestAuth) : '';
         $asetAuthAda = file_exists(public_path('hot'))
-            || (file_exists($manifestAuth) && str_contains((string) file_get_contents($manifestAuth), 'resources/js/auth.js'));
+            || (str_contains($isiManifest, 'resources/css/auth.css')
+                && str_contains($isiManifest, 'resources/js/auth.js'));
     @endphp
 
     @if ($asetAuthAda)
