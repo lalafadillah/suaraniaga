@@ -5,8 +5,8 @@
 -- Cara impor ke phpMyAdmin:
 --   1. phpMyAdmin > tab "Import" > "Pilih berkas" > pilih berkas ini
 --      > format SQL > "Kirim".
---   2. Basis data `suaranniaga` dibuat otomatis oleh skrip ini.
---   3. Pastikan .env menunjuk ke basis data `suaranniaga`, lalu jalankan:
+--   2. Basis data `suaraniaga` dibuat otomatis oleh skrip ini.
+--   3. Pastikan .env menunjuk ke basis data `suaraniaga`, lalu jalankan:
 --        php artisan migrate    (tidak ada migrasi yang tertinggal)
 --        php artisan serve
 --
@@ -19,8 +19,16 @@
 -- users.is_active menentukan apakah akun boleh masuk.
 -- Hash kata sandi di bawah ini sengaja ikut disertakan agar akun demo bisa
 -- langsung dipakai setelah impor.
+--
+-- Kolom tambahan yang sudah termasuk di sini:
+--   products.stock                  -> jumlah stok barang
+--   orders.quantity                 -> jumlah barang yang dipesan
+--   orders.recipient_name/phone     -> nama dan telepon penerima
+--   orders.shipping_address         -> alamat pengiriman
+--   orders.note, orders.payment_method
+--   users.phone, users.address      -> data pengiriman pembeli
+--   users.mode_aksesibilitas        -> 1 bila pengguna memilih mode aksesibilitas
 -- ============================================================================
-
 -- MySQL dump 10.13  Distrib 8.4.3, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: suaraniaga
@@ -54,8 +62,8 @@ DROP TABLE IF EXISTS `cache`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cache` (
-  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `value` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `value` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `expiration` bigint NOT NULL,
   PRIMARY KEY (`key`),
   KEY `cache_expiration_index` (`expiration`)
@@ -66,8 +74,10 @@ CREATE TABLE `cache` (
 -- Dumping data for table `cache`
 --
 
+LOCK TABLES `cache` WRITE;
 /*!40000 ALTER TABLE `cache` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cache` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `cache_locks`
@@ -77,8 +87,8 @@ DROP TABLE IF EXISTS `cache_locks`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cache_locks` (
-  `key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `owner` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `owner` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `expiration` bigint NOT NULL,
   PRIMARY KEY (`key`),
   KEY `cache_locks_expiration_index` (`expiration`)
@@ -89,8 +99,10 @@ CREATE TABLE `cache_locks` (
 -- Dumping data for table `cache_locks`
 --
 
+LOCK TABLES `cache_locks` WRITE;
 /*!40000 ALTER TABLE `cache_locks` DISABLE KEYS */;
 /*!40000 ALTER TABLE `cache_locks` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `failed_jobs`
@@ -101,11 +113,11 @@ DROP TABLE IF EXISTS `failed_jobs`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `failed_jobs` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `uuid` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `connection` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `uuid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`),
@@ -117,8 +129,10 @@ CREATE TABLE `failed_jobs` (
 -- Dumping data for table `failed_jobs`
 --
 
+LOCK TABLES `failed_jobs` WRITE;
 /*!40000 ALTER TABLE `failed_jobs` DISABLE KEYS */;
 /*!40000 ALTER TABLE `failed_jobs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `job_batches`
@@ -128,13 +142,13 @@ DROP TABLE IF EXISTS `job_batches`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `job_batches` (
-  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `total_jobs` int NOT NULL,
   `pending_jobs` int NOT NULL,
   `failed_jobs` int NOT NULL,
-  `failed_job_ids` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
-  `options` mediumtext COLLATE utf8mb4_unicode_ci,
+  `failed_job_ids` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `options` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
   `cancelled_at` int DEFAULT NULL,
   `created_at` int NOT NULL,
   `finished_at` int DEFAULT NULL,
@@ -146,8 +160,10 @@ CREATE TABLE `job_batches` (
 -- Dumping data for table `job_batches`
 --
 
+LOCK TABLES `job_batches` WRITE;
 /*!40000 ALTER TABLE `job_batches` DISABLE KEYS */;
 /*!40000 ALTER TABLE `job_batches` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `jobs`
@@ -158,8 +174,8 @@ DROP TABLE IF EXISTS `jobs`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `jobs` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `queue` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `attempts` smallint unsigned NOT NULL,
   `reserved_at` int unsigned DEFAULT NULL,
   `available_at` int unsigned NOT NULL,
@@ -173,8 +189,10 @@ CREATE TABLE `jobs` (
 -- Dumping data for table `jobs`
 --
 
+LOCK TABLES `jobs` WRITE;
 /*!40000 ALTER TABLE `jobs` DISABLE KEYS */;
 /*!40000 ALTER TABLE `jobs` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `migrations`
@@ -185,19 +203,21 @@ DROP TABLE IF EXISTS `migrations`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `migrations` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `migrations`
 --
 
+LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
-INSERT INTO `migrations` VALUES (1,'0001_01_01_000000_create_users_table',1),(2,'0001_01_01_000001_create_cache_table',1),(3,'0001_01_01_000002_create_jobs_table',1),(4,'2026_11_08_000100_add_role_to_users_table',1),(5,'2026_11_08_000200_create_products_table',1),(6,'2026_11_08_000300_create_orders_table',1),(7,'2026_11_08_000400_allow_admin_role_to_users_table',2),(8,'2026_11_08_000500_add_is_active_to_users_table',2);
+INSERT INTO `migrations` VALUES (1,'0001_01_01_000000_create_users_table',1),(2,'0001_01_01_000001_create_cache_table',1),(3,'0001_01_01_000002_create_jobs_table',1),(4,'2026_11_08_000100_add_role_to_users_table',1),(5,'2026_11_08_000200_create_products_table',1),(6,'2026_11_08_000300_create_orders_table',1),(7,'2026_11_08_000400_allow_admin_role_to_users_table',2),(8,'2026_11_08_000500_add_is_active_to_users_table',2),(9,'2026_11_08_000600_add_stock_to_products_table',3),(10,'2026_11_08_000700_add_checkout_fields_to_orders_table',3),(11,'2026_11_08_000800_add_accessibility_mode_to_users_table',3),(12,'2026_11_08_000900_add_phone_and_address_to_users_table',3);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `orders`
@@ -210,7 +230,13 @@ CREATE TABLE `orders` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `buyer_id` bigint unsigned NOT NULL,
   `product_id` bigint unsigned NOT NULL,
-  `status` enum('baru','diproses','dikirim','selesai') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'baru',
+  `quantity` int unsigned NOT NULL DEFAULT '1',
+  `recipient_name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `recipient_phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `shipping_address` text COLLATE utf8mb4_unicode_ci,
+  `note` text COLLATE utf8mb4_unicode_ci,
+  `payment_method` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` enum('baru','diproses','dikirim','selesai') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'baru',
   `total_price` int unsigned NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
@@ -227,9 +253,11 @@ CREATE TABLE `orders` (
 -- Dumping data for table `orders`
 --
 
+LOCK TABLES `orders` WRITE;
 /*!40000 ALTER TABLE `orders` DISABLE KEYS */;
-INSERT INTO `orders` VALUES (1,2,2,'baru',89000,'2026-11-07 21:47:52','2026-11-07 21:47:52'),(2,2,4,'baru',34000,'2026-11-07 21:47:52','2026-11-07 21:47:52');
+INSERT INTO `orders` VALUES (1,2,2,1,NULL,NULL,NULL,NULL,NULL,'baru',89000,'2026-11-07 21:47:52','2026-11-07 21:47:52'),(2,2,4,1,NULL,NULL,NULL,NULL,NULL,'baru',34000,'2026-11-07 21:47:52','2026-11-07 21:47:52');
 /*!40000 ALTER TABLE `orders` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `password_reset_tokens`
@@ -239,8 +267,8 @@ DROP TABLE IF EXISTS `password_reset_tokens`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `password_reset_tokens` (
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -250,8 +278,10 @@ CREATE TABLE `password_reset_tokens` (
 -- Dumping data for table `password_reset_tokens`
 --
 
+LOCK TABLES `password_reset_tokens` WRITE;
 /*!40000 ALTER TABLE `password_reset_tokens` DISABLE KEYS */;
 /*!40000 ALTER TABLE `password_reset_tokens` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `products`
@@ -263,11 +293,12 @@ DROP TABLE IF EXISTS `products`;
 CREATE TABLE `products` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `seller_id` bigint unsigned NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `price` int unsigned NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `audio_description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `image_url` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `stock` int unsigned NOT NULL DEFAULT '0',
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `audio_description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `image_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -281,9 +312,11 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
+LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (1,1,'Beras Setra Ramos 5 kg',72000,'Beras pulen dengan tekstur lembut. Dikemas dalam karung 5 kg yang tertutup rapat. Cocok untuk konsumsi sehari-hari.','Beras Setra Ramos 5 kilogram. Harga tujuh puluh dua ribu rupiah. Stok tersedia. Beras pulen dengan tekstur lembut, dikemas dalam karung lima kilogram yang tertutup rapat.',NULL,'2026-11-07 21:47:52','2026-11-07 21:47:52'),(2,1,'Beras Pandan Wangi 5 kg',89000,'Beras pandan wangi dengan aroma khas yang kuat. Kemasan rapi 5 kg, kualitas premium untuk hidangan harian.','Beras Pandan Wangi 5 kilogram. Harga delapan puluh sembilan ribu rupiah. Aroma wangi, kualitas premium.',NULL,'2026-11-07 21:47:52','2026-11-07 21:47:52'),(3,1,'Beras Medium 5 kg',65000,'Beras medium dengan harga terjangkau. Cocok untuk kebutuhan keluarga sehari-hari.','Beras Medium 5 kilogram. Harga enam puluh lima ribu rupiah. Pilihan ekonomis keluarga.',NULL,'2026-11-07 21:47:52','2026-11-07 21:47:52'),(4,1,'Minyak Goreng 2 L',34000,'Minyak goreng kemasan 2 liter. Praktis untuk kebutuhan dapur harian.','Minyak Goreng 2 liter. Harga tiga puluh empat ribu rupiah. Kemasan besar, siap pakai.',NULL,'2026-11-07 21:47:52','2026-11-07 21:47:52'),(5,1,'Telur Ayam 1 kg',28000,'Telur ayam segar berat 1 kilogram. Diambil langsung dari peternak nearby.','Telur Ayam 1 kilogram. Harga dua puluh delapan ribu rupiah. Segar dan mudah diolah.',NULL,'2026-11-07 21:47:52','2026-11-07 21:47:52');
+INSERT INTO `products` VALUES (1,1,'Beras Setra Ramos 5 kg',72000,24,'Beras pulen dengan tekstur lembut. Dikemas dalam karung 5 kg yang tertutup rapat. Cocok untuk konsumsi sehari-hari.','Beras Setra Ramos 5 kilogram. Harga tujuh puluh dua ribu rupiah. Stok tersedia. Beras pulen dengan tekstur lembut, dikemas dalam karung lima kilogram yang tertutup rapat.',NULL,'2026-11-07 21:47:52','2026-11-07 21:47:52'),(2,1,'Beras Pandan Wangi 5 kg',89000,18,'Beras pandan wangi dengan aroma khas yang kuat. Kemasan rapi 5 kg, kualitas premium untuk hidangan harian.','Beras Pandan Wangi 5 kilogram. Harga delapan puluh sembilan ribu rupiah. Aroma wangi, kualitas premium.',NULL,'2026-11-07 21:47:52','2026-11-07 21:47:52'),(3,1,'Beras Medium 5 kg',65000,30,'Beras medium dengan harga terjangkau. Cocok untuk kebutuhan keluarga sehari-hari.','Beras Medium 5 kilogram. Harga enam puluh lima ribu rupiah. Pilihan ekonomis keluarga.',NULL,'2026-11-07 21:47:52','2026-11-07 21:47:52'),(4,1,'Minyak Goreng 2 L',34000,40,'Minyak goreng kemasan 2 liter. Praktis untuk kebutuhan dapur harian.','Minyak Goreng 2 liter. Harga tiga puluh empat ribu rupiah. Kemasan besar, siap pakai.',NULL,'2026-11-07 21:47:52','2026-11-07 21:47:52'),(5,1,'Telur Ayam 1 kg',28000,12,'Telur ayam segar berat 1 kilogram. Diambil langsung dari peternak nearby.','Telur Ayam 1 kilogram. Harga dua puluh delapan ribu rupiah. Segar dan mudah diolah.',NULL,'2026-11-07 21:47:52','2026-11-07 21:47:52');
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `sessions`
@@ -293,11 +326,11 @@ DROP TABLE IF EXISTS `sessions`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `sessions` (
-  `id` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `user_id` bigint unsigned DEFAULT NULL,
-  `ip_address` varchar(45) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `user_agent` text COLLATE utf8mb4_unicode_ci,
-  `payload` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ip_address` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_agent` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `last_activity` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `sessions_user_id_index` (`user_id`),
@@ -309,8 +342,10 @@ CREATE TABLE `sessions` (
 -- Dumping data for table `sessions`
 --
 
+LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `users`
@@ -321,13 +356,16 @@ DROP TABLE IF EXISTS `users`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `phone` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` text COLLATE utf8mb4_unicode_ci,
   `email_verified_at` timestamp NULL DEFAULT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `role` enum('buyer','seller','admin') COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'buyer',
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `role` enum('buyer','seller','admin') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'buyer',
+  `mode_aksesibilitas` tinyint(1) NOT NULL DEFAULT '0',
   `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `remember_token` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -340,13 +378,11 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
+LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Toko Necessitas','seller@suaraniaga.test',NULL,'$2y$12$oNDncK4feImPad8n5CLRcOWty2OE2NaBL0rgVQAgXOdluUWd6ax0i','seller',1,NULL,'2026-11-07 21:47:52','2026-11-07 21:47:52'),(2,'Budi Pembeli','buyer@suaraniaga.test',NULL,'$2y$12$uRPS/1wlDCez5.L/uf9PpOYvYu0xp2GQmyiZLA4KuEa7mDLE50toC','buyer',1,NULL,'2026-11-07 21:47:52','2026-11-07 22:42:02'),(3,'Admin Demo','admin@suaranniaga.test',NULL,'$2y$12$xDPLJVOEneOe1KmOzQLX8.dvo7NFRmz99MuQtm9lqBDLHPDi5T3pi','admin',1,NULL,'2026-11-07 22:38:25','2026-11-07 22:38:25');
+INSERT INTO `users` VALUES (1,'Toko Necessitas','seller@suaraniaga.test',NULL,NULL,NULL,'$2y$12$oNDncK4feImPad8n5CLRcOWty2OE2NaBL0rgVQAgXOdluUWd6ax0i','seller',0,1,NULL,'2026-11-07 21:47:52','2026-11-07 21:47:52'),(2,'Budi Pembeli','buyer@suaraniaga.test',NULL,NULL,NULL,'$2y$12$uRPS/1wlDCez5.L/uf9PpOYvYu0xp2GQmyiZLA4KuEa7mDLE50toC','buyer',0,1,NULL,'2026-11-07 21:47:52','2026-11-07 22:42:02'),(3,'Admin Demo','admin@suaranniaga.test',NULL,NULL,NULL,'$2y$12$xDPLJVOEneOe1KmOzQLX8.dvo7NFRmz99MuQtm9lqBDLHPDi5T3pi','admin',0,1,NULL,'2026-11-07 22:38:25','2026-11-07 22:38:25');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
-
---
--- Dumping routines for database 'suaraniaga'
---
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -357,4 +393,4 @@ INSERT INTO `users` VALUES (1,'Toko Necessitas','seller@suaraniaga.test',NULL,'$
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-08 12:58:21
+-- Dump completed on 2026-11-08 17:43:28

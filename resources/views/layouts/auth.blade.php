@@ -42,6 +42,13 @@
 
         <footer class="border-t border-line bg-surface px-[22px] py-5 text-[13px] text-muted">
             <p>SuaraNiaga — marketplace ramah tunanetra.</p>
+
+            <form method="POST" action="{{ route('mode.aksesibilitas', 'aksesibilitas') }}" class="mt-3">
+                @csrf
+                <button type="submit" class="text-brand underline underline-offset-4">
+                    Mode aksesibilitas
+                </button>
+            </form>
         </footer>
     </div>
 </body>

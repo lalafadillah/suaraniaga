@@ -30,6 +30,7 @@ class ProductFactory extends Factory
             'seller_id' => User::where('role', User::ROLE_SELLER)->value('id') ?? User::factory()->create(['role' => User::ROLE_SELLER])->id,
             'name' => $name,
             'price' => $price,
+            'stock' => fake()->numberBetween(1, 40),
             'description' => $name.' segar, dibuat dengan bahan pilihan dan tanpa pengawet.',
             'audio_description' => $name.' dengan harga '.number_format($price, 0, ',', '.').' rupiah. Dibuat dengan bahan pilihan.',
             'image_url' => null,

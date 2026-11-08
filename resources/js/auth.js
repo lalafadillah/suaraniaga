@@ -23,21 +23,6 @@ function initPasswordToggles() {
     });
 }
 
-function initValidasiFokus() {
-    const ringkasan = document.getElementById('ringkasan-galat');
-
-    if (ringkasan) {
-        ringkasan.focus();
-        return;
-    }
-
-    const fieldSalah = document.querySelector('[aria-invalid="true"]');
-
-    if (fieldSalah) {
-        fieldSalah.focus();
-    }
-}
-
 function initKirimForm() {
     document.querySelectorAll('[data-auth-form]').forEach((form) => {
         form.addEventListener('submit', () => {
@@ -58,6 +43,5 @@ function initKirimForm() {
 
 document.addEventListener('DOMContentLoaded', () => {
     initPasswordToggles();
-    initValidasiFokus();
     initKirimForm();
 });

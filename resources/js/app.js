@@ -222,3 +222,40 @@ Alpine.store('announcer', {
 
 window.Alpine = Alpine;
 Alpine.start();
+
+/**
+ * Validasi formulir: fokus pindah ke ringkasan error, lalu tombol kirim
+ * dinonaktifkan supaya tidak terkirim dua kali.
+ */
+function initValidasiFokus() {
+    const ringkasan = document.getElementById('ringkasan-galat');
+
+    if (ringkasan) {
+        ringkasan.focus();
+        return;
+    }
+
+    const fieldSalah = document.querySelector('[aria-invalid="true"]');
+
+    if (fieldSalah) {
+        fieldSalah.focus();
+    }
+}
+
+function initKirimForm() {
+    document.querySelectorAll('[data-form-siap]').forEach((form) => {
+        form.addEventListener('submit', () => {
+            const tombol = form.querySelector('button[type="submit"]');
+
+            if (tombol) {
+                tombol.disabled = true;
+                tombol.textContent = 'Memproses…';
+            }
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    initValidasiFokus();
+    initKirimForm();
+});

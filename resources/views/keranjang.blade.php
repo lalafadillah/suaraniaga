@@ -1,109 +1,122 @@
 @extends('layouts.app')
 
-@php
-    $semuaProduk = collect(config('suaranniaga.produk'))->keyBy('id');
-    $barang = collect(config('suaranniaga.keranjang'))
-        ->map(function ($row) use ($semuaProduk) {
-            $p = $semuaProduk[$row['produk_id']];
-
-            return [
-                'id' => $p['id'],
-                'nama' => $p['nama'],
-                'harga' => $p['harga'],
-                'stok' => $p['stok'],
-                'jumlah' => $row['jumlah'],
-            ];
-        })
-        ->values();
-@endphp
-
 @section('content')
-    <div x-data="{
-        items: @js($barang),
-        format(angka) {
-            return 'Rp ' + angka.toLocaleString('id-ID');
-        },
-        get total() {
-            return this.items.reduce((jumlah, item) => jumlah + item.harga * item.jumlah, 0);
-        },
-        ubah(index, selisih) {
-            const item = this.items[index];
-            const baru = Math.max(1, item.jumlah + selisih);
+    <x-page-heading
+        title="Keranjang saya"
+        description="Periksa nama produk, jumlah, dan total sebelum melanjutkan."
+    />
 
-            item.jumlah = baru;
-            this.$store.announcer.say(item.nama + ' jumlah ' + baru + ', total ' + this.format(this.total));
-        },
-        hapus(index) {
-            const item = this.items[index];
-            this.items.splice(index, 1);
-            this.$store.announcer.say(item.nama + ' dihapus dari keranjang');
-        },
-    }">
+    @if (session('status'))
+        <p role="status" class="mb-6 rounded-card border border-line bg-surface px-5 py-4 text-[15px] text-ink">
+            {{ session('status') }}
+        </p>
+    @endif
 
-        <x-page-heading
-            title="Keranjang saya"
-            description="Periksa nama produk, jumlah, dan total sebelum melanjutkan."
-        />
+    @if ($errors->any())
+        <div id="ringkasan-galat"
+             role="alert"
+             tabindex="-1"
+             class="mb-6 rounded-card border border-line bg-surface px-5 py-4">
+            <h2 class="text-[17px] font-semibold text-ink">Ada kesalahan</h2>
+            <ul class="mt-2 list-disc pl-6 text-[15px] text-body">
+                @foreach ($errors->all() as $pesan)
+                    <li>{{ $pesan }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
+    @if ($barang->isEmpty())
+        <section class="rounded-card border border-line bg-surface p-8">
+            <h2 class="text-[20px] font-semibold text-ink">Keranjang masih kosong</h2>
+            <p class="mt-2 text-[15px] text-muted">
+                Cari produk dulu, lalu tekan "Tambahkan ke keranjang" di halaman detail produk.
+            </p>
+            <div class="mt-6 flex flex-wrap gap-3">
+                <x-btn href="{{ route('cari') }}">Cari produk</x-btn>
+                <x-btn href="{{ route('beranda') }}" variant="outline">Kembali ke beranda</x-btn>
+            </div>
+        </section>
+    @else
         <div class="grid gap-6 lg:grid-cols-[1fr_340px]">
             <div>
                 <ul class="space-y-4">
-                    <template x-for="(item, index) in items" :key="item.id">
+                    @foreach ($barang as $row)
                         <li class="rounded-card border border-line bg-surface p-6">
-                            <h2 class="text-[18px] font-semibold text-ink" x-text="item.nama"></h2>
+                            <h2 class="text-[18px] font-semibold text-ink">{{ $row['nama'] }}</h2>
 
                             <p class="mt-1 text-[15px] text-muted">
-                                <span x-text="format(item.harga)"></span>
+                                Rp {{ number_format($row['harga'], 0, ',', '.') }}
                                 <span aria-hidden="true">•</span>
-                                Jumlah <span x-text="item.jumlah"></span>
+                                Stok {{ $row['stok'] }}
                             </p>
 
-                            <div class="mt-4">
-                                <x-status-pill tone="success" x-text="item.stok"></x-status-pill>
-                            </div>
+                            <p class="mt-3 text-[15px] font-semibold text-brand">
+                                Subtotal: Rp {{ number_format($row['subtotal'], 0, ',', '.') }}
+                            </p>
 
-                            <div class="mt-5 flex flex-wrap items-center gap-3">
-                                <x-btn variant="soft" size="sm"
-                                       x-on:click="ubah(index, -1)"
-                                       x-bind:aria-label="'Kurangi jumlah ' + item.nama">
-                                    Kurangi
-                                </x-btn>
+                            <div class="mt-5 flex flex-wrap items-end gap-4">
+                                <form method="POST"
+                                      action="{{ route('keranjang.ubah', $row['produk']) }}"
+                                      data-form-siap
+                                      class="flex flex-wrap items-end gap-3">
+                                    @csrf
+                                    @method('PATCH')
 
-                                <x-btn variant="soft" size="sm"
-                                       x-on:click="ubah(index, 1)"
-                                       x-bind:aria-label="'Tambah jumlah ' + item.nama">
-                                    Tambah
-                                </x-btn>
+                                    <div>
+                                        <label for="jumlah-{{ $row['produk']->id }}"
+                                               class="block text-[14px] font-semibold text-ink">
+                                            Jumlah {{ $row['nama'] }}
+                                        </label>
+                                        <input id="jumlah-{{ $row['produk']->id }}"
+                                               name="jumlah"
+                                               type="number"
+                                               inputmode="numeric"
+                                               min="1"
+                                               max="{{ min($row['stok'], 20) }}"
+                                               value="{{ $row['jumlah'] }}"
+                                               class="mt-2 h-[54px] w-[120px] rounded-[9px] border border-line bg-surface px-4 text-base text-body focus:border-brand">
+                                    </div>
 
-                                <x-btn variant="ghost" size="sm"
-                                       x-on:click="hapus(index)"
-                                       x-bind:aria-label="'Hapus ' + item.nama + ' dari keranjang'">
-                                    Hapus
-                                </x-btn>
+                                    <x-btn type="submit" variant="soft" size="sm">Simpan jumlah {{ $row['nama'] }}</x-btn>
+                                </form>
+
+                                <form method="POST" action="{{ route('keranjang.hapus', $row['produk']) }}">
+                                    @csrf
+                                    @method('DELETE')
+                                    <x-btn type="submit" variant="ghost" size="sm">
+                                        Hapus {{ $row['nama'] }} dari keranjang
+                                    </x-btn>
+                                </form>
                             </div>
                         </li>
-                    </template>
+                    @endforeach
                 </ul>
 
                 <p class="mt-8 max-w-[1000px] text-sm text-muted">
-                    Aksi tersedia: tambah jumlah, kurangi jumlah, hapus barang, dan lanjut checkout. Setiap perubahan akan diumumkan.
+                    Jumlah bisa diubah dan barang bisa dihapus. Semua perubahan langsung tersimpan.
                 </p>
             </div>
 
-            <aside class="h-fit rounded-card border border-line bg-surface p-6">
-                <h2 class="text-[20px] font-semibold text-ink">Ringkasan pesanan</h2>
+            <aside class="h-fit rounded-card border border-line bg-surface p-6" aria-labelledby="ringkasan-judul">
+                <h2 id="ringkasan-judul" class="text-[20px] font-semibold text-ink">Ringkasan pesanan</h2>
 
                 <dl class="mt-6 space-y-3">
                     <div class="flex items-center justify-between">
+                        <dt class="text-[15px] text-muted">Jumlah barang</dt>
+                        <dd class="text-[15px] font-semibold text-body">{{ $barang->sum('jumlah') }}</dd>
+                    </div>
+
+                    <div class="flex items-center justify-between">
                         <dt class="text-[15px] text-muted">Subtotal</dt>
-                        <dd class="text-[15px] font-semibold text-body" x-text="format(total)"></dd>
+                        <dd class="text-[15px] font-semibold text-body">Rp {{ number_format($total, 0, ',', '.') }}</dd>
                     </div>
 
                     <hr class="border-line">
 
                     <div class="flex items-center justify-between">
                         <dt class="text-[18px] font-semibold text-ink">Total</dt>
-                        <dd class="text-[18px] font-bold text-brand" x-text="format(total)"></dd>
+                        <dd class="text-[18px] font-bold text-brand">Rp {{ number_format($total, 0, ',', '.') }}</dd>
                     </div>
                 </dl>
 
@@ -112,5 +125,5 @@
                 </div>
             </aside>
         </div>
-    </div>
+    @endif
 @endsection

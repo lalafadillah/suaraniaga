@@ -18,11 +18,14 @@ class OrderFactory extends Factory
     {
         $product = Product::inRandomOrder()->first() ?? Product::factory()->create();
 
+        $quantity = fake()->numberBetween(1, 3);
+
         return [
             'buyer_id' => User::where('role', User::ROLE_BUYER)->value('id') ?? User::factory()->create(['role' => User::ROLE_BUYER])->id,
             'product_id' => $product->id,
+            'quantity' => $quantity,
             'status' => Order::STATUS_BARU,
-            'total_price' => $product->price,
+            'total_price' => $product->price * $quantity,
         ];
     }
 }

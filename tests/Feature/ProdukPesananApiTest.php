@@ -57,6 +57,7 @@ class ProdukPesananApiTest extends TestCase
             'seller_id' => $seller->id,
             'name' => $nama,
             'price' => $harga,
+            'stock' => 10,
             'description' => $deskripsi,
             'audio_description' => 'Deskripsi audio untuk '.$nama,
         ]);

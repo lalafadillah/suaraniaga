@@ -4,8 +4,12 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Produk dummy
+    | Produk contoh untuk data demo
     |--------------------------------------------------------------------------
+    |
+    | Daftar ini dipakai DatabaseSeeder untuk mengisi tabel products. Halaman
+    | katalog, keranjang, dan pesanan membaca langsung dari database.
+    |
     */
 
     'produk' => [
@@ -14,7 +18,7 @@ return [
             'nama' => 'Beras Setra Ramos 5 kg',
             'ringkas' => 'Pulen, kemasan tertutup',
             'harga' => 72000,
-            'stok' => 'Stok tersedia',
+            'stock' => 24,
             'deskripsi' => 'Beras pulen dengan tekstur lembut. Dikemas dalam karung 5 kg yang tertutup rapat. Cocok untuk konsumsi sehari-hari.',
             'toko' => 'Toko Beras Sejahtera',
             'rating' => '4,8',
@@ -26,7 +30,7 @@ return [
             'nama' => 'Beras Pandan Wangi 5 kg',
             'ringkas' => 'Aroma wangi, kualitas premium',
             'harga' => 89000,
-            'stok' => 'Stok tersedia',
+            'stock' => 18,
             'deskripsi' => 'Beras pandan wangi dengan aroma khas yang kuat. Kemasan rapi 5 kg, kualitas premium untuk hidangan harian.',
             'toko' => 'Toko Beras Sejahtera',
             'rating' => '4,7',
@@ -38,7 +42,7 @@ return [
             'nama' => 'Beras Medium 5 kg',
             'ringkas' => 'Pilihan ekonomis keluarga',
             'harga' => 65000,
-            'stok' => 'Stok tersedia',
+            'stock' => 30,
             'deskripsi' => 'Beras medium dengan harga terjangkau. Cocok untuk kebutuhan keluarga sehari-hari.',
             'toko' => 'Toko Beras Sejahtera',
             'rating' => '4,5',
@@ -50,7 +54,7 @@ return [
             'nama' => 'Minyak Goreng 2 L',
             'ringkas' => 'Kemasan besar, siap pakai',
             'harga' => 34000,
-            'stok' => 'Stok tersedia',
+            'stock' => 40,
             'deskripsi' => 'Minyak goreng kemasan 2 liter. Praktis untuk kebutuhan dapur harian.',
             'toko' => 'Toko Dapur Sejahtera',
             'rating' => '4,6',
@@ -61,9 +65,8 @@ return [
             'id' => 5,
             'nama' => 'Telur Ayam 1 kg',
             'ringkas' => 'Segar, mudah diolah',
-            'stok' => 'Stok tersedia',
             'harga' => 28000,
-            'stok' => 'Stok tersedia',
+            'stock' => 12,
             'deskripsi' => 'Telur ayam segar berat 1 kilogram. Diambil langsung dari peternak nearby.',
             'toko' => 'Toko Segar Bandung',
             'rating' => '4,9',

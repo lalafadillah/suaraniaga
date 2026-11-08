@@ -40,7 +40,9 @@
                                aria-label="Dengarkan deskripsi {{ $item['nama'] }}">
                             Dengarkan deskripsi
                         </x-btn>
-                        <x-btn href="{{ route('keranjang') }}" size="mobile" class="w-full">Tambah ke keranjang</x-btn>
+                        <x-btn href="{{ route('produk.detail', $item['id']) }}" size="mobile" class="w-full">
+                            Lihat dan pesan {{ $item['nama'] }}
+                        </x-btn>
                     </div>
                 </article>
             @endforeach

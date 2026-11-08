@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\ModeAksesibilitas;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,8 +16,14 @@ use Illuminate\View\View;
  */
 class AkunController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        if (ModeAksesibilitas::aktif($request)) {
+            return view('aksesibilitas.profil', [
+                'title' => 'Profil',
+            ]);
+        }
+
         return $this->halaman('akun.index', [
             'title' => 'Akun saya',
             'mobileTitle' => 'Akun saya',

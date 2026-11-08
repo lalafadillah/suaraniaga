@@ -48,6 +48,7 @@ class ContractSmokeTest extends TestCase
             'seller_id' => $seller->id,
             'name' => 'Kue Lapis',
             'price' => 10000,
+            'stock' => 10,
             'description' => 'Kue lapis multilayer',
             'audio_description' => 'Kue lapis dengan lapisan tipis dan manis',
         ]);

@@ -21,7 +21,13 @@
     --color-success: #137a55;
     --color-success-soft: #e8f5ef;
     --color-amber-soft: #fff4e3;
+    --color-danger: #a3231b;
+    --color-danger-soft: #fdeeed;
     --color-focus: #d97706;
+
+    /* Mode Aksesibilitas: aksen oranye dan latar halaman dari desain Figma */
+    --color-accent: #e8992e;
+    --color-canvas-aks: #f6f9fc;
 
     /* Skala teks dari desain, satuan rem agar mengikuti skala aksesibilitas */
     --text-13: 0.8125rem;

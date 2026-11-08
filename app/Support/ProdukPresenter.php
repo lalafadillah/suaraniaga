@@ -19,7 +19,7 @@ class ProdukPresenter
             'nama' => $produk->name,
             'ringkas' => Str::limit($produk->description, 70),
             'harga' => $produk->price,
-            'stok' => 'Stok tersedia',
+            'stok' => $produk->stock,
             'deskripsi' => $produk->description,
             'toko' => $produk->seller?->name ?? 'Penjual SuaraNiaga',
             'rating' => '-',

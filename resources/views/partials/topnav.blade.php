@@ -12,5 +12,11 @@
         <span>{{ $mode }}</span>
         <span aria-hidden="true" class="text-muted">•</span>
         <a href="{{ route('pengaturan') }}" class="rounded text-brand underline-offset-4 hover:underline">Bantuan</a>
+        <form method="POST" action="{{ route('mode.aksesibilitas', 'aksesibilitas') }}">
+            @csrf
+            <button type="submit" class="rounded text-brand underline-offset-4 hover:underline">
+                Mode aksesibilitas
+            </button>
+        </form>
     </div>
 </header>

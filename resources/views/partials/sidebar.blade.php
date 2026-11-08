@@ -45,6 +45,13 @@
     </nav>
 
     <div class="px-6 pb-9">
+        <form method="POST" action="{{ route('mode.aksesibilitas', 'aksesibilitas') }}" class="mb-6">
+            @csrf
+            <button type="submit" class="nav-link text-left">
+                Mode aksesibilitas
+            </button>
+        </form>
+
         <hr class="mb-5 border-line">
         <h2 class="text-[13px] font-semibold text-ink">Navigasi keyboard</h2>
         <p class="mt-1.5 text-xs leading-relaxed text-muted">

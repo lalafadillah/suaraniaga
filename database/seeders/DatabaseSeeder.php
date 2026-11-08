@@ -53,6 +53,7 @@ class DatabaseSeeder extends Seeder
                     'seller_id' => $seller->id,
                     'name' => $data['nama'],
                     'price' => $data['harga'],
+                    'stock' => $data['stock'],
                     'description' => $data['deskripsi'],
                     'audio_description' => $data['audio'],
                 ]

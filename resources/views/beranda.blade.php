@@ -76,7 +76,7 @@
                 </p>
 
                 <div class="mt-5">
-                    <x-btn href="{{ route('pesanan.sukses') }}" variant="outline">Pesanan saya</x-btn>
+                    <x-btn href="{{ route('pesanan') }}" variant="outline">Pesanan saya</x-btn>
                 </div>
             </section>
         </div>
