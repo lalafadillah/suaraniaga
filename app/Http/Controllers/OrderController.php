@@ -19,12 +19,13 @@ class OrderController extends Controller
             'Hanya akun pembeli yang dapat memesan produk.'
         );
 
-        $order = Order::create([
-            'buyer_id' => $request->user()->id,
-            'product_id' => $produk->id,
-            'status' => Order::STATUS_BARU,
-            'total_price' => $produk->price,
-        ]);
+        // Nilai pesanan diambil dari server, bukan dari input pengguna.
+        $order = new Order;
+        $order->buyer_id = $request->user()->id;
+        $order->product_id = $produk->id;
+        $order->status = Order::STATUS_BARU;
+        $order->total_price = $produk->price;
+        $order->save();
 
         return redirect()->route('orders.confirmation', $order);
     }

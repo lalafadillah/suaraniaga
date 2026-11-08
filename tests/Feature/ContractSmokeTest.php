@@ -13,6 +13,13 @@ class ContractSmokeTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->withoutVite();
+    }
+
     private int $sequence = 0;
 
     private function seller(): User

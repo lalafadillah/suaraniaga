@@ -28,6 +28,17 @@ class Order extends Model
         self::STATUS_SELESAI,
     ];
 
+    /**
+     * Urutan status pesanan. Penjual hanya boleh menaikkan status, tidak
+     * boleh mengembalikannya ke langkah sebelumnya.
+     */
+    public const URUTAN_STATUS = [
+        self::STATUS_BARU,
+        self::STATUS_DIPROSES,
+        self::STATUS_DIKIRIM,
+        self::STATUS_SELESAI,
+    ];
+
     protected $attributes = [
         'status' => self::STATUS_BARU,
     ];
@@ -53,5 +64,20 @@ class Order extends Model
     public function getTotalTextAttribute(): string
     {
         return Rupiah::format($this->total_price);
+    }
+
+    /**
+     * Status yang sama atau lebih maju dari status sekarang diperbolehkan.
+     */
+    public function bisaMajuKe(string $status): bool
+    {
+        $sekarang = array_search($this->status, self::URUTAN_STATUS, true);
+        $target = array_search($status, self::URUTAN_STATUS, true);
+
+        if ($sekarang === false || $target === false) {
+            return false;
+        }
+
+        return $target >= $sekarang;
     }
 }

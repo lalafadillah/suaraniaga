@@ -6,7 +6,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 
-return Application::configure(basePath: dirname(__DIR__))
+$app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         api: __DIR__.'/../routes/api.php',
@@ -23,3 +23,12 @@ return Application::configure(basePath: dirname(__DIR__))
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
     })->create();
+
+// Aturan aksesibilitas: halaman harus memakai lang="id" walaupun berkas .env
+// lokal masih menyimpan APP_LOCALE=en.
+$app->booted(function (): void {
+    app()->setLocale('id');
+    app()->setFallbackLocale('id');
+});
+
+return $app;

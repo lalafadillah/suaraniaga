@@ -10,8 +10,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use InvalidArgumentException;
 
-#[Fillable(['name', 'email', 'password', 'role'])]
+#[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -50,5 +51,44 @@ class User extends Authenticatable
     public function isSeller(): bool
     {
         return $this->role === self::ROLE_SELLER;
+    }
+
+    /**
+     * Peran tidak boleh masuk lewat mass assignment bebas.
+     *
+     * Kolom role sengaja tidak ada di daftar fillable, tetapi seeder dan
+     * pendaftaran tetap boleh menetapkan peran. Nilainya dicek di setter,
+     * jadi hanya buyer atau seller yang bisa tersimpan.
+     *
+     * @param  array<string, mixed>  $attributes
+     */
+    public function fill(array $attributes): static
+    {
+        $role = $attributes['role'] ?? null;
+
+        unset($attributes['role']);
+
+        parent::fill($attributes);
+
+        if ($role !== null) {
+            $this->role = $role;
+        }
+
+        return $this;
+    }
+
+    public function setRoleAttribute(?string $value): void
+    {
+        if ($value === null) {
+            $this->attributes['role'] = self::ROLE_BUYER;
+
+            return;
+        }
+
+        if (! in_array($value, self::ROLES, true)) {
+            throw new InvalidArgumentException('Peran tidak dikenal: '.$value);
+        }
+
+        $this->attributes['role'] = $value;
     }
 }

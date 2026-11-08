@@ -149,6 +149,12 @@ class SellerController extends Controller
             'Pesanan ini bukan untuk produk Anda.'
         );
 
+        if (! $order->bisaMajuKe($data['status'])) {
+            return back()->withErrors([
+                'status' => 'Status pesanan tidak bisa dikembalikan ke langkah sebelumnya.',
+            ]);
+        }
+
         $order->update(['status' => $data['status']]);
 
         return back()->with('status', 'Status pesanan diperbarui menjadi '.$data['status'].'.');
