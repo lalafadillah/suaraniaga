@@ -6,14 +6,22 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class AuthController extends Controller
 {
+    private const PERAN_DITERIMA = ['buyer', 'seller', 'pembeli', 'penjual'];
+
     public function showRegister(): View
     {
-        return view('guest.register');
+        return $this->halaman('guest.register', [
+            'title' => 'Daftar Akun',
+            'mobileTitle' => 'Daftar Akun',
+            'active' => 'profil',
+            'context' => 'Daftar akun baru untuk mulai belanja dengan suara',
+        ]);
     }
 
     public function register(Request $request): RedirectResponse
@@ -22,35 +30,42 @@ class AuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'role' => ['nullable', Rule::in(User::ROLES)],
+            'role' => ['nullable', Rule::in(self::PERAN_DITERIMA)],
         ], [
             'name.required' => 'Nama wajib diisi.',
             'email.required' => 'Email wajib diisi.',
             'email.email' => 'Format email tidak valid.',
-            'email.unique' => 'Email ini sudah terdaftar.',
+            'email.unique' => 'Email ini sudah terdaftar. Silakan masuk.',
             'password.required' => 'Kata sandi wajib diisi.',
             'password.min' => 'Kata sandi minimal 8 karakter.',
             'password.confirmed' => 'Konfirmasi kata sandi tidak cocok.',
             'role.in' => 'Peran yang dipilih tidak dikenal.',
         ]);
 
+        $role = $this->normalisasiPeran($data['role'] ?? User::ROLE_BUYER);
+
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => $data['password'],
-            'role' => $data['role'] ?? User::ROLE_BUYER,
+            'password' => Hash::make($data['password']),
+            'role' => $role,
         ]);
 
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->intended(route('catalog.index'))
+        return redirect()->route($this->tujuanPeran($role))
             ->with('status', 'Berhasil mendaftar. Selamat datang di SuaraNiaga.');
     }
 
     public function showLogin(): View
     {
-        return view('guest.login');
+        return $this->halaman('guest.login', [
+            'title' => 'Masuk',
+            'mobileTitle' => 'Masuk',
+            'active' => 'profil',
+            'context' => 'Masuk untuk melanjutkan',
+        ]);
     }
 
     public function login(Request $request): RedirectResponse
@@ -64,9 +79,7 @@ class AuthController extends Controller
             'password.required' => 'Kata sandi wajib diisi.',
         ]);
 
-        $remember = $request->boolean('remember');
-
-        if (! Auth::attempt(['email' => $data['email'], 'password' => $data['password']], $remember)) {
+        if (! Auth::attempt(['email' => $data['email'], 'password' => $data['password']], $request->boolean('remember'))) {
             return back()
                 ->withInput($request->only('email'))
                 ->withErrors(['email' => 'Email atau kata sandi salah.']);
@@ -74,7 +87,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('catalog.index'))
+        return redirect()->intended(route($this->tujuanPeran($request->user()->role)))
             ->with('status', 'Berhasil masuk.');
     }
 
@@ -85,7 +98,19 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('catalog.index')
+        return redirect()->route('beranda')
             ->with('status', 'Anda telah keluar.');
+    }
+
+    private function normalisasiPeran(string $role): string
+    {
+        return in_array($role, [User::ROLE_SELLER, 'penjual'], true)
+            ? User::ROLE_SELLER
+            : User::ROLE_BUYER;
+    }
+
+    private function tujuanPeran(string $role): string
+    {
+        return $role === User::ROLE_SELLER ? 'seller.dashboard' : 'beranda';
     }
 }

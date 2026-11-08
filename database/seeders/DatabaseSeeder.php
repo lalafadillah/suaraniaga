@@ -8,6 +8,13 @@ use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
+/**
+ * Data demo untuk seluruh mesin SuaraNiaga.
+ *
+ * Produk diambil dari config/suaranniaga.php supaya katalog, halaman detail,
+ * dan pencarian suara memakai data yang sama. Id produk mengikuti id config
+ * agar tautan /produk/{id} tetap konsisten.
+ */
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
@@ -17,45 +24,6 @@ class DatabaseSeeder extends Seeder
     public const BUYER_EMAIL = 'buyer@suaraniaga.test';
 
     public const PASSWORD = 'password123';
-
-    private array $products = [
-        [
-            'name' => 'Kue Lapis Legit',
-            'price' => 10000,
-            'description' => 'Kue lapis multilayer dengan santan premium, lembut dan tidak terlalu manis.',
-            'audio_description' => 'Kue Lapis Legit. Harga sepuluh ribu rupiah. Lapisan tipis yang lembut, dibuat dengan santan premium.',
-        ],
-        [
-            'name' => 'Kue Cubit Mentega',
-            'price' => 15000,
-            'description' => 'Kue cubit setengah matang dengan aroma butter yang kuat.',
-            'audio_description' => 'Kue Cubit Mentega. Harga lima belas ribu rupiah. Kue setengah matang dengan aroma butter yang harum.',
-        ],
-        [
-            'name' => 'Kerupuk Udang',
-            'price' => 25000,
-            'description' => 'Kerupuk udang renyah, digoreng ulang saat dikirim.',
-            'audio_description' => 'Kerupuk Udang. Harga dua puluh lima ribu rupiah. Renyah dan gurih, digoreng ulang sebelum dikirim.',
-        ],
-        [
-            'name' => 'Es Kriming Cokelat',
-            'price' => 8000,
-            'description' => 'Es kriming cokelat dengan potongan cokelat pekat.',
-            'audio_description' => 'Es Kriming Cokelat. Harga delapan ribu rupiah. Berisi cokelat pekat dan ais kriming yang lembut.',
-        ],
-        [
-            'name' => 'Baju Batik Tulis Madu',
-            'price' => 120000,
-            'description' => 'Kemeja batik tulis tangan dengan motif daun dan bahan katun.',
-            'audio_description' => 'Baju Batik Tulis Madu. Harga seratus dua puluh ribu rupiah. Kemeja batik tulis tangan dengan motif daun.',
-        ],
-        [
-            'name' => 'Sambal Roa Manado',
-            'price' => 35000,
-            'description' => 'Sambal roa khas Manado dengan ikan asap dan Singkong.',
-            'audio_description' => 'Sambal Roa Manado. Harga tiga puluh lima ribu rupiah. Sambal khas Manado dengan ikan asap yang gurih.',
-        ],
-    ];
 
     public function run(): void
     {
@@ -69,13 +37,17 @@ class DatabaseSeeder extends Seeder
             ['name' => 'Budi Pembeli', 'password' => self::PASSWORD, 'role' => User::ROLE_BUYER]
         );
 
-        foreach ($this->products as $data) {
+        $produk = config('suaranniaga.produk', []);
+
+        foreach ($produk as $data) {
             Product::updateOrCreate(
-                ['seller_id' => $seller->id, 'name' => $data['name']],
+                ['id' => $data['id']],
                 [
-                    'price' => $data['price'],
-                    'description' => $data['description'],
-                    'audio_description' => $data['audio_description'],
+                    'seller_id' => $seller->id,
+                    'name' => $data['nama'],
+                    'price' => $data['harga'],
+                    'description' => $data['deskripsi'],
+                    'audio_description' => $data['audio'],
                 ]
             );
         }

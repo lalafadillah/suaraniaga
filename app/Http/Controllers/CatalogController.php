@@ -2,35 +2,44 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use App\Support\Katalog;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class CatalogController extends Controller
 {
-    public function index(Request $request): View
+    public function index(): View
     {
-        $q = trim((string) $request->query('q', ''));
-
-        $products = Product::query()
-            ->with('seller')
-            ->when($q !== '', function ($query) use ($q) {
-                $query->where(function ($inner) use ($q) {
-                    $inner->where('name', 'like', '%'.$q.'%')
-                        ->orWhere('description', 'like', '%'.$q.'%');
-                });
-            })
-            ->latest()
-            ->paginate(12)
-            ->withQueryString();
-
-        return view('buyer.index', compact('products', 'q'));
+        return $this->halaman('beranda', [
+            'title' => 'Beranda',
+            'context' => 'Beranda pembeli • Fokus pada satu tindakan utama',
+            'active' => 'beranda',
+        ]);
     }
 
-    public function show(Product $product): View
+    public function search(Request $request): View
     {
-        $product->load('seller');
+        return $this->halaman('cari', [
+            'title' => 'Cari Produk',
+            'mobileTitle' => 'Cari produk',
+            'context' => 'Pencarian produk • Input suara dan teks',
+            'active' => 'cari',
+            'produk' => Katalog::cari((string) $request->query('q', '')),
+        ]);
+    }
 
-        return view('buyer.products.show', compact('product'));
+    public function show(int $produk): View
+    {
+        $data = Katalog::detail($produk);
+
+        abort_if($data === null, 404, 'Produk tidak ditemukan.');
+
+        return $this->halaman('detail-produk', [
+            'title' => 'Detail Produk',
+            'mobileTitle' => $data['nama'],
+            'context' => 'Detail produk • Informasi utama dan deskripsi audio',
+            'active' => 'cari',
+            'produk' => $data,
+        ]);
     }
 }
