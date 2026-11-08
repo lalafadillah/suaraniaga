@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en" data-text-scale="normal" data-contrast="standar" data-motion="normal">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Beranda — SuaraNiaga</title>
+
+    <link rel="preload" as="font" href="http://127.0.0.1:8123/build/assets/inter-400-normal-C38fXH4l.woff2" type="font/woff2" crossorigin="anonymous" />
+<link rel="preload" as="font" href="http://127.0.0.1:8123/build/assets/inter-500-normal-Cerq10X2.woff2" type="font/woff2" crossorigin="anonymous" />
+<link rel="preload" as="font" href="http://127.0.0.1:8123/build/assets/inter-600-normal-LgqL8muc.woff2" type="font/woff2" crossorigin="anonymous" />
+<link rel="preload" as="font" href="http://127.0.0.1:8123/build/assets/inter-700-normal-Yt3aPRUw.woff2" type="font/woff2" crossorigin="anonymous" />
+<style>
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/build/assets/inter-400-normal-C38fXH4l.woff2") format("woff2");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/build/assets/inter-400-normal-CyCys3Eg.woff") format("woff");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/build/assets/inter-500-normal-Cerq10X2.woff2") format("woff2");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/build/assets/inter-500-normal-BL9OpVg8.woff") format("woff");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/build/assets/inter-600-normal-LgqL8muc.woff2") format("woff2");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/build/assets/inter-600-normal-CiBQ2DWP.woff") format("woff");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/build/assets/inter-700-normal-Yt3aPRUw.woff2") format("woff2");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/build/assets/inter-700-normal-BLAVimhd.woff") format("woff");
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+:root {
+  --font-inter: "Inter";
+}
+
+.font-inter {
+  font-family: var(--font-inter);
+}
+</style>
+    <link rel="preload" as="style" href="http://127.0.0.1:8123/build/assets/app-DchHkl5S.css" /><link rel="modulepreload" as="script" href="http://127.0.0.1:8123/build/assets/app-BRJb0v4Y.js" /><link rel="stylesheet" href="http://127.0.0.1:8123/build/assets/app-DchHkl5S.css" /><script type="module" src="http://127.0.0.1:8123/build/assets/app-BRJb0v4Y.js"></script></head>
+<body class="min-h-screen font-sans antialiased">
+    <a href="#konten-utama" class="skip-link">Lompat ke konten utama</a>
+
+    
+    <div aria-live="polite" aria-atomic="true" class="sr-only" x-data x-text="$store.announcer.message"></div>
+
+    <div class="flex min-h-screen flex-col">
+        <header class="sticky top-0 z-30 hidden h-[82px] items-center gap-6 border-b border-line bg-surface lg:flex lg:px-12">
+    <a href="http://127.0.0.1:8123" class="shrink-0 text-[25px] font-bold text-brand">SuaraNiaga</a>
+
+    <p class="flex-1 text-sm text-muted">Beranda pembeli • Fokus pada satu tindakan utama</p>
+
+    <div class="ml-auto flex items-center gap-4 text-sm font-medium text-ink">
+        <span>Mode Pembeli</span>
+        <span aria-hidden="true" class="text-muted">•</span>
+        <a href="http://127.0.0.1:8123/pengaturan" class="rounded text-brand underline-offset-4 hover:underline">Bantuan</a>
+    </div>
+</header>
+
+        
+                <div class="px-[22px] pb-2 pt-5 lg:hidden">
+                            <a href="http://127.0.0.1:8123" class="text-[24px] font-bold text-brand">SuaraNiaga</a>
+                    </div>
+
+        <div class="flex flex-1">
+            <aside class="hidden w-[252px] shrink-0 flex-col border-r border-line bg-surface lg:flex">
+    <nav class="flex-1 px-[18px] pt-9" aria-label="Navigasi pembeli">
+        <ul>
+                            <li>
+                    <a href="http://127.0.0.1:8123"
+                        aria-current="page"                        class="nav-link">Beranda</a>
+                </li>
+                            <li>
+                    <a href="http://127.0.0.1:8123/cari"
+                                              class="nav-link">Cari Produk</a>
+                </li>
+                            <li>
+                    <a href="http://127.0.0.1:8123/keranjang"
+                                              class="nav-link">Keranjang</a>
+                </li>
+                            <li>
+                    <a href="http://127.0.0.1:8123/pesanan"
+                                              class="nav-link">Pesanan Saya</a>
+                </li>
+                            <li>
+                    <a href="http://127.0.0.1:8123/favorit"
+                                              class="nav-link">Favorit</a>
+                </li>
+                            <li>
+                    <a href="http://127.0.0.1:8123/profil"
+                                              class="nav-link">Profil</a>
+                </li>
+                            <li>
+                    <a href="http://127.0.0.1:8123/pengaturan"
+                                              class="nav-link">Pengaturan Aksesibilitas</a>
+                </li>
+                    </ul>
+    </nav>
+
+    <div class="px-6 pb-9">
+        <hr class="mb-5 border-line">
+        <h2 class="text-[13px] font-semibold text-ink">Navigasi keyboard</h2>
+        <p class="mt-1.5 text-xs leading-relaxed text-muted">
+            Tekan Tab untuk berpindah. Pembaca layar akan membacakan nama elemen.
+        </p>
+    </div>
+</aside>
+
+            <main id="konten-utama" tabindex="-1" class="flex-1 px-[22px] pb-[92px] pt-6 lg:px-10 lg:py-10 lg:pb-10">
+                <div class="mx-auto w-full max-w-[1080px]" x-data>
+                                                
+    <div class="lg:hidden">
+        <h1 class="text-[24px] font-bold text-ink">Selamat datang</h1>
+        <p class="mt-2 text-[15px] text-muted">Belanja mandiri dengan suara.</p>
+
+        <div class="mt-6 flex flex-col gap-3">
+            <a href="http://127.0.0.1:8123/cari" class="inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 bg-brand text-white hover:bg-brand/90 h-[66px] px-4 text-[16px] w-full">Mulai cari produk</a>
+            <a href="http://127.0.0.1:8123/pesanan" class="inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 border border-brand bg-surface text-brand hover:bg-brand-soft h-[58px] px-4 text-[15px] w-full">Pesanan saya</a>
+            <a href="http://127.0.0.1:8123/cari" class="inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 border border-brand bg-surface text-brand hover:bg-brand-soft h-[58px] px-4 text-[15px] w-full">Jelajahi kategori</a>
+        </div>
+
+        <hr class="my-6 border-line">
+
+        <h2 class="text-[18px] font-semibold text-ink">Navigasi sederhana</h2>
+        <p class="mt-2 text-[14px] text-muted">Beranda • Cari • Keranjang • Profil</p>
+
+        <div class="mt-6 rounded-[12px] bg-brand-soft p-5">
+            <h2 class="text-[16px] font-semibold text-brand">Asisten suara</h2>
+            <p class="mt-1.5 text-[13px] text-muted">Tekan tombol mikrofon saat ingin berbicara.</p>
+        </div>
+    </div>
+
+    
+    <div class="hidden lg:block">
+        <div class="mb-7">
+    
+    <h1 class="hidden text-[30px] font-bold leading-tight text-ink lg:block">Selamat datang di SuaraNiaga</h1>
+
+            <p class="mt-2 max-w-[760px] text-base text-muted">Belanja mandiri dengan suara. Semua menu bisa digunakan memakai keyboard atau pembaca layar.</p>
+    </div>
+
+        
+        <section class="rounded-panel border border-line bg-surface p-7">
+            <h2 class="text-[24px] font-semibold text-ink">Apa yang ingin kamu cari hari ini?</h2>
+            <p class="mt-2 max-w-[700px] text-base text-muted">
+                Ucapkan nama barang, atau pilih tombol pencarian di bawah.
+            </p>
+
+            <div class="mt-6 flex flex-wrap gap-4">
+                <a href="http://127.0.0.1:8123/cari" class="inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 bg-brand text-white hover:bg-brand/90 h-16 px-6 text-base">Mulai cari produk</a>
+            </div>
+        </section>
+
+        <div class="mt-6 grid gap-5 lg:grid-cols-2">
+            <section class="rounded-card border border-line bg-surface p-6">
+                <h2 class="text-[18px] font-semibold text-ink">Cari berdasarkan suara</h2>
+                <p class="mt-2 text-[15px] text-muted">
+                    Tekan tombol mikrofon, lalu sebutkan nama barang yang kamu butuhkan.
+                </p>
+
+                <div class="mt-5" x-data="{ query: '' }"
+                     x-on:voice-transcript.window="query = $event.detail.value; $store.announcer.say('Hasil suara: ' + query)">
+
+                    <div class="flex flex-wrap items-center gap-4" @voice-transcript="query = $event.detail.value"
+     x-data="{
+        recording: false,
+        start() {
+            this.recording = true;
+            $store.suara.start((value) => {
+                this.recording = false;
+                this.$dispatch('voice-transcript', { value });
+            });
+        },        stop() {
+            this.recording = false;
+            $store.suara.stop();
+        },
+     }">
+
+    <button type="button" class="inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 border border-line bg-surface text-ink hover:bg-brand-soft h-[54px] px-6 text-base" x-bind:class="recording ? '!border-brand !bg-brand-soft' : ''" x-on:click="recording ? stop() : start()" x-bind:aria-pressed="recording"><span x-show="!recording">Mulai pencarian suara</span>
+        <span x-show="recording" x-cloak>Hentikan rekaman</span></button>
+
+    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-success-soft text-success" x-show="$store.suara.state === 'listening'">
+    Sedang mendengarkan
+</span>
+    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold bg-brand-soft text-brand" x-show="$store.suara.state === 'processing'" x-cloak="x-cloak">
+    Memproses suara
+</span>
+
+            <p class="text-[13px] text-muted-soft">Jika mikrofon tidak didukung, ketik di bawah.</p>
+    
+    <p class="w-full text-[13px] text-muted-soft" x-show="$store.suara.error" x-cloak x-text="$store.suara.error" role="alert"></p>
+</div>
+
+                    <form action="http://127.0.0.1:8123/cari" method="GET" class="mt-4 flex gap-3">
+                        <label for="kategori" class="sr-only">Kata kunci produk</label>
+                        <input id="kategori"
+                               name="q"
+                               type="search"
+                               x-model="query"
+                               placeholder="Contoh: beras 5 kilogram"
+                               class="h-[54px] w-full rounded-[9px] border border-line bg-surface px-4 text-base text-body placeholder:text-muted focus:border-brand">
+                        <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 bg-brand text-white hover:bg-brand/90 h-[54px] px-6 text-base">Cari</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="rounded-card border border-line bg-surface p-6">
+                <h2 class="text-[18px] font-semibold text-ink">Lanjutkan aktivitas</h2>
+                <p class="mt-2 text-[15px] text-muted">
+                    Lihat pesanan terakhir dan status pengiriman tanpa harus mencari menu.
+                </p>
+
+                <div class="mt-5">
+                    <a href="http://127.0.0.1:8123/pesanan/berhasil" class="inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 border border-brand bg-surface text-brand hover:bg-brand-soft h-[54px] px-6 text-base">Pesanan saya</a>
+                </div>
+            </section>
+        </div>
+
+        <h2 class="mt-10 text-[20px] font-semibold text-ink">Akses cepat</h2>
+
+        <div class="mt-4 grid gap-4 sm:grid-cols-3">
+            <a href="http://127.0.0.1:8123/cari" class="inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 border border-brand bg-surface text-brand hover:bg-brand-soft h-[54px] px-6 text-base">Jelajahi kategori</a>
+            <a href="http://127.0.0.1:8123/keranjang" class="inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 border border-brand bg-surface text-brand hover:bg-brand-soft h-[54px] px-6 text-base">Buka keranjang</a>
+            <a href="http://127.0.0.1:8123/pengaturan" class="inline-flex items-center justify-center gap-2 rounded-[10px] font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60 border border-brand bg-surface text-brand hover:bg-brand-soft h-[54px] px-6 text-base">Pengaturan aksesibilitas</a>
+        </div>
+
+        <p class="mt-10 max-w-[1020px] text-sm text-muted">
+            Catatan: NVDA / Narrator akan membacakan elemen saat fokus berpindah. SuaraNiaga tidak menggandakan suara pembaca layar.
+        </p>
+    </div>
+                                    </div>
+            </main>
+        </div>
+    </div>
+
+    <nav class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-surface lg:hidden"
+     aria-label="Navigasi utama ringkas">
+    <ul class="flex">
+                    <li class="min-w-0 flex-1">
+                <a href="http://127.0.0.1:8123"
+                    aria-current="page"                    class="flex min-h-[60px] min-w-0 flex-col items-center justify-center gap-1 px-1 py-2 text-center text-[12px] font-medium
+                          text-brand">
+                    <span aria-hidden="true" class="h-[3px] w-6 shrink-0 rounded-full bg-brand"></span>
+                    <span class="w-full truncate">Beranda</span>
+                </a>
+            </li>
+                    <li class="min-w-0 flex-1">
+                <a href="http://127.0.0.1:8123/cari"
+                                      class="flex min-h-[60px] min-w-0 flex-col items-center justify-center gap-1 px-1 py-2 text-center text-[12px] font-medium
+                          text-muted">
+                    <span aria-hidden="true" class="h-[3px] w-6 shrink-0 rounded-full bg-transparent"></span>
+                    <span class="w-full truncate">Cari</span>
+                </a>
+            </li>
+                    <li class="min-w-0 flex-1">
+                <a href="http://127.0.0.1:8123/keranjang"
+                                      class="flex min-h-[60px] min-w-0 flex-col items-center justify-center gap-1 px-1 py-2 text-center text-[12px] font-medium
+                          text-muted">
+                    <span aria-hidden="true" class="h-[3px] w-6 shrink-0 rounded-full bg-transparent"></span>
+                    <span class="w-full truncate">Keranjang</span>
+                </a>
+            </li>
+                    <li class="min-w-0 flex-1">
+                <a href="http://127.0.0.1:8123/profil"
+                                      class="flex min-h-[60px] min-w-0 flex-col items-center justify-center gap-1 px-1 py-2 text-center text-[12px] font-medium
+                          text-muted">
+                    <span aria-hidden="true" class="h-[3px] w-6 shrink-0 rounded-full bg-transparent"></span>
+                    <span class="w-full truncate">Profil</span>
+                </a>
+            </li>
+            </ul>
+</nav>
+
+    <footer class="border-t border-line bg-surface px-[22px] pb-[76px] pt-5 text-[13px] text-muted lg:hidden">
+        <p class="flex items-center gap-2">
+            <span>Mode Pembeli</span>
+            <span aria-hidden="true">•</span>
+            <a href="http://127.0.0.1:8123/pengaturan" class="text-brand underline-offset-4 hover:underline">Bantuan</a>
+        </p>
+    </footer>
+</body>
+</html>

@@ -4,6 +4,128 @@
 @source '../../storage/framework/views/*.php';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* Warna inti dari desain Figma */
+    --color-brand: #174f86;
+    --color-brand-soft: #eef4f9;
+    --color-canvas: #f6f8fb;
+    --color-surface: #ffffff;
+    --color-ink: #14243a;
+    --color-body: #172536;
+    --color-muted: #526273;
+    --color-muted-soft: #4a596b;
+    --color-line: #d8e0e8;
+    --color-line-strong: #c7d6e3;
+    --color-success: #137a55;
+    --color-success-soft: #e8f5ef;
+    --color-amber-soft: #fff4e3;
+    --color-focus: #d97706;
+
+    /* Skala teks dari desain, satuan rem agar mengikuti skala aksesibilitas */
+    --text-13: 0.8125rem;
+    --text-15: 0.9375rem;
+    --text-22: 1.375rem;
+    --text-25: 1.5625rem;
+    --text-26: 1.625rem;
+    --text-28: 1.75rem;
+
+    --radius-card: 0.875rem;
+    --radius-panel: 1rem;
+}
+
+@layer base {
+    html {
+        font-size: 16px;
+    }
+
+    /* Skala teks: seluruh ukuran mengikuti rem sehingga ikut diperbesar */
+    html[data-text-scale='besar'] {
+        font-size: 18px;
+    }
+
+    html[data-text-scale='sangat-besar'] {
+        font-size: 20px;
+    }
+
+    /* Kontras tinggi: menimpa token warna,utility Tailwind tetap mengacu ke var ini */
+    html[data-contrast='tinggi'] {
+        --color-brand: #0a3f70;
+        --color-canvas: #ffffff;
+        --color-ink: #000000;
+        --color-body: #000000;
+        --color-muted: #22303f;
+        --color-muted-soft: #22303f;
+        --color-line: #5b6b7c;
+        --color-line-strong: #3c4a5a;
+        --color-success: #0c5c3f;
+        --color-success-soft: #d8f0e4;
+        --color-amber-soft: #fff0d4;
+    }
+
+    body {
+        background-color: var(--color-canvas);
+        color: var(--color-body);
+    }
+
+    /* Fokus keyboard selalu terlihat dan tebal, sesuai brief desain */
+    :focus-visible {
+        outline: 3px solid var(--color-focus);
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
+
+    [hidden] {
+        display: none !important;
+    }
+}
+
+@layer components {
+    .skip-link {
+        position: absolute;
+        left: 1rem;
+        top: -4rem;
+        z-index: 100;
+        background: var(--color-brand);
+        color: #fff;
+        padding: 0.75rem 1.25rem;
+        border-radius: 0.625rem;
+        font-weight: 600;
+        transition: top 0.15s ease;
+    }
+
+    .skip-link:focus {
+        top: 1rem;
+    }
+
+    .nav-link {
+        display: block;
+        width: 100%;
+        border-radius: 0.5625rem;
+        padding: 0.75rem 0.5rem 0.75rem 1.25rem;
+        font-size: 0.9375rem;
+        font-weight: 500;
+        color: var(--color-muted);
+        white-space: nowrap;
+        transition: background-color 0.15s ease, color 0.15s ease;
+    }
+
+    .nav-link:hover {
+        background: var(--color-brand-soft);
+    }
+
+    .nav-link[aria-current='page'] {
+        background: var(--color-brand-soft);
+        color: var(--color-brand);
+        font-weight: 600;
+    }
+
+    /* Mengurangi animasi sesuai pengaturan aksesibilitas */
+    html[data-motion='kurangi'] *,
+    html[data-motion='kurangi'] *::before,
+    html[data-motion='kurangi'] *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+    }
 }
