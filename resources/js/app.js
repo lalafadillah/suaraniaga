@@ -1,12 +1,17 @@
 import Alpine from 'alpinejs';
+import { initNavigasiSuara } from './voice/navigasi.js';
 
 /**
  * Mesin suara SuaraNiaga.
  *
  * Prinsip: NVDA / Narrator / VoiceOver tetap pembaca layar utama. SuaraNiaga
- * hanya menambah input suara (SpeechRecognition) dan pemutaran deskripsi
- * audio (SpeechSynthesis) atas permintaan eksplisit pengguna — tidak pernah
- * menggandakan suara pembaca layar secara otomatis.
+ * menambah input suara (SpeechRecognition) dan pemutaran deskripsi audio
+ * (SpeechSynthesis) atas permintaan eksplisit pengguna.
+ *
+ * Navigasi suara global (resources/js/voice/navigasi.js) membaca nama dan
+ * jenis elemen yang ditunjuk pointer atau dipilih keyboard. Pembacaan itu
+ * mengikuti mode aksesibilitas dan bisa dimatikan lewat pengaturan, dan tidak
+ * pernah memotong suara deskripsi yang sedang diputar.
  */
 
 const RECOGNITION_LANG = 'id-ID';
@@ -24,6 +29,7 @@ const defaultPrefs = {
     contrast: 'standar',
     screenReader: 'nvda',
     voiceAssistant: 'aktif',
+    voiceNavigation: 'auto',
     speechRate: 'normal',
     motion: 'normal',
 };
@@ -51,6 +57,7 @@ Alpine.store('suara', {
     synthesisSupported: 'speechSynthesis' in window,
     error: '',
     onResult: null,
+    suarAktif: false,
 
     _recognition: null,
 
@@ -162,16 +169,20 @@ Alpine.store('suara', {
         utterance.lang = RECOGNITION_LANG;
         utterance.rate = SPEECH_RATES[prefs.speechRate] ?? 1;
 
+        this.suarAktif = true;
+
         utterance.onstart = () => {
             this.state = 'speaking';
         };
 
         utterance.onend = () => {
             this.state = 'idle';
+            this.suarAktif = false;
         };
 
         utterance.onerror = () => {
             this.state = 'idle';
+            this.suarAktif = false;
         };
 
         window.speechSynthesis.speak(utterance);
@@ -180,6 +191,7 @@ Alpine.store('suara', {
     stopSpeaking() {
         window.speechSynthesis.cancel();
         this.state = 'idle';
+        this.suarAktif = false;
     },
 });
 
@@ -222,6 +234,20 @@ Alpine.store('announcer', {
 
 window.Alpine = Alpine;
 Alpine.start();
+
+/**
+ * Navigasi suara global: nama dan jenis elemen dibacakan otomatis saat
+ * pointer melewati atau fokus berpindah.
+ *
+ * Pembacaan mengikuti mode aksesibilitas dari server. Pengguna bisa
+ * menyalakan atau mematikannya sendiri lewat pengaturan.
+ */
+initNavigasiSuara({
+    modeServer: () => document.documentElement.dataset.modeAksesibilitas === '1',
+    prefs: () => Alpine.store('prefs').values,
+    laju: () => Alpine.store('prefs').speechRate,
+    suarAktif: () => Alpine.store('suara').suarAktif,
+});
 
 /**
  * Validasi formulir: fokus pindah ke ringkasan error, lalu tombol kirim

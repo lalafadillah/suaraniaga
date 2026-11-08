@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-text-scale="normal" data-contrast="standar" data-motion="normal" data-mode-aksesibilitas="{{ \App\Support\ModeAksesibilitas::preferensi() ? '1' : '0' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,6 +15,19 @@
         .tautan { display: inline-block; margin-top: 24px; background: #0f5c4e; color: #ffffff; padding: 14px 24px; border-radius: 10px; font-weight: 600; text-decoration: none; }
         .tautan:focus, .tautan:hover { background: #0b463c; }
     </style>
+
+    {{-- Navigasi suara global juga berlaku di halaman galat. Aset app.js
+         hanya ikut termuat kalau sudah ada di build atau dev server. --}}
+    @php
+        $manifestApp = public_path('build/manifest.json');
+        $isiManifestApp = file_exists($manifestApp) ? (string) file_get_contents($manifestApp) : '';
+        $asetAppAda = file_exists(public_path('hot'))
+            || str_contains($isiManifestApp, 'resources/js/app.js');
+    @endphp
+
+    @if ($asetAppAda)
+        @vite(['resources/js/app.js'])
+    @endif
 </head>
 <body>
     <a class="skip-link" href="#konten-utama">Lompat ke konten utama</a>

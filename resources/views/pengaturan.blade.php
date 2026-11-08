@@ -26,6 +26,11 @@
                 ['value' => 'aktif', 'label' => 'Aktif'],
                 ['value' => 'nonaktif', 'label' => 'Nonaktif'],
             ]],
+            ['key' => 'voiceNavigation', 'judul' => 'Pembacaan navigasi', 'ringkas' => 'Nama dan jenis elemen dibacakan saat pointer melewati atau fokus berpindah', 'opsi' => [
+                ['value' => 'auto', 'label' => 'Ikuti mode aksesibilitas'],
+                ['value' => 'aktif', 'label' => 'Aktif'],
+                ['value' => 'nonaktif', 'label' => 'Nonaktif'],
+            ]],
             ['key' => 'speechRate', 'judul' => 'Kecepatan suara', 'ringkas' => 'Lambat / Normal / Cepat', 'opsi' => [
                 ['value' => 'lambat', 'label' => 'Lambat'],
                 ['value' => 'normal', 'label' => 'Normal'],
@@ -74,6 +79,7 @@
 
     <p class="mt-8 max-w-[1000px] text-sm text-muted">
         Catatan: NVDA / Narrator / VoiceOver tetap menjadi pembaca layar utama. Asisten Suara SuaraNiaga adalah fitur tambahan, bukan pengganti screen reader.
+        Pembacaan navigasi mengikuti mode aksesibilitas; pilih Nonaktif di baris <strong>Pembacaan navigasi</strong> bila ingin membungkamnya.
     </p>
 
     <div class="mt-10">

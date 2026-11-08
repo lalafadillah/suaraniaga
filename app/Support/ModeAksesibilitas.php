@@ -27,6 +27,20 @@ class ModeAksesibilitas
             return false;
         }
 
+        return self::preferensi($request);
+    }
+
+    /**
+     * Pilihan mode milik pengguna, tanpa pengecualian admin.
+     *
+     * Mode Aksesibilitas mengubah tampilan halaman, jadi admin tetap memakai
+     * tampilan admin. Navigasi suara global, sebaliknya, ikut pilihan yang
+     * sama supaya membaca elemen juga berlaku di halaman admin.
+     */
+    public static function preferensi(?Request $request = null): bool
+    {
+        $request = $request ?? request();
+
         if ($request->hasSession()) {
             $sesi = $request->session()->get(self::KUNCI_SESI);
 
@@ -35,7 +49,7 @@ class ModeAksesibilitas
             }
         }
 
-        return (bool) ($user?->mode_aksesibilitas ?? false);
+        return (bool) ($request->user()?->mode_aksesibilitas ?? false);
     }
 
     public static function simpan(Request $request, bool $aktif): void

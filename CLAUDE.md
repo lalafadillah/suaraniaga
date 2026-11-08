@@ -69,3 +69,21 @@ Semua memakai sesi buatan sendiri dan middleware `auth` / `guest`.
 Tampilan akun ada di resources/views/akun/index.blade.php (ditulis backend).
 Skema MySQL untuk impor ke phpMyAdmin tersedia di database/suaranniaga.sql
 (struktur saja, tanpa data akun; isi data demo dengan `php artisan db:seed`).
+
+## Navigasi suara global
+Modul: resources/js/voice/navigasi.js, dimuat dari resources/js/app.js, jadi
+semua layout (app, auth, aksesibilitas, dan halaman galat 403) memakai sistem
+yang sama.
+- Pointer melewati elemen atau fokus berpindah (Tab / Shift+Tab): nama dan
+  jenis elemen dibacakan dalam Bahasa Indonesia (id-ID, rate 1, pitch 1,
+  volume 1). Suara Google Bahasa Indonesia dipakai bila tersedia.
+- Kolom isian dibacakan lengkap: label, jenis, placeholder bila relevan,
+  status wajib diisi, dan pesan galat validasi. Isi field tidak pernah dibaca.
+- Pembacaan otomatis mengikuti Mode Aksesibilitas. Atribut
+  `data-mode-aksesibilitas` pada elemen <html> meneruskan status mode dari
+  server ke peramban (App\Support\ModeAksesibilitas::preferensi()).
+- Pengguna bisa mengubahnya lewat pengaturan: pref `voiceNavigation` dengan
+  nilai auto / aktif / nonaktif. Nilai "aktif" berlaku di halaman mana pun,
+  termasuk halaman admin.
+- Pidato otomatis tidak boleh memotong suara deskripsi yang sedang diputar
+  oleh pengguna (Alpine store `suara`, property `suarAktif`).

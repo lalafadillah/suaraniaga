@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" data-text-scale="normal" data-contrast="standar" data-motion="normal">
+<html lang="id" data-text-scale="normal" data-contrast="standar" data-motion="normal" data-mode-aksesibilitas="{{ \App\Support\ModeAksesibilitas::preferensi() ? '1' : '0' }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
