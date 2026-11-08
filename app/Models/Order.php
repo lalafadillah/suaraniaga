@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Rupiah;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -51,6 +52,6 @@ class Order extends Model
 
     public function getTotalTextAttribute(): string
     {
-        return 'Rp'.number_format($this->total_price, 0, ',', '.');
+        return Rupiah::format($this->total_price);
     }
 }

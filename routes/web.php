@@ -36,8 +36,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/pesanan/berhasil', [HalamanController::class, 'pesananBerhasil'])->name('pesanan.sukses');
         Route::get('/favorit', [HalamanController::class, 'favorit'])->name('favorit');
 
-        Route::post('/produk/{produk}/order', [OrderController::class, 'store'])->name('orders.store');
-        Route::post('/products/{produk}/order', [OrderController::class, 'store'])->name('products.order');
+        Route::post('/products/{produk}/order', [OrderController::class, 'store'])->name('orders.store');
+        Route::post('/produk/{produk}/order', [OrderController::class, 'store'])->name('products.order');
         Route::get('/orders/{order}/konfirmasi', [OrderController::class, 'confirmation'])->name('orders.confirmation');
     });
 
@@ -51,8 +51,10 @@ Route::middleware('auth')->group(function () {
         Route::patch('/penjual/pesanan/{order}/status', [SellerController::class, 'updateOrderStatus'])->name('penjual.pesanan.status');
 
         Route::get('/seller/dashboard', [SellerController::class, 'dashboard'])->name('seller.dashboard');
+        Route::get('/seller/products', [SellerController::class, 'produk'])->name('seller.products.index');
         Route::get('/seller/products/create', [SellerController::class, 'createProduct'])->name('seller.products.create');
         Route::post('/seller/products', [SellerController::class, 'storeProduct'])->name('seller.products.store');
+        Route::get('/seller/orders', [SellerController::class, 'pesanan'])->name('seller.orders.index');
         Route::patch('/seller/orders/{order}/status', [SellerController::class, 'updateOrderStatus'])->name('seller.orders.status');
     });
 });

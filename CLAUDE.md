@@ -11,8 +11,9 @@ Hackathon CR YOUTH 2026, 12 jam, tim 3 orang. Pengguna utama memakai screen read
 
 ## Stack
 - Laravel (PHP 8.2+), Blade, MySQL
-- CSS biasa di public/css/suaraniaga.css (TANPA Vite/Tailwind/npm build)
-- JavaScript murni di public/js/ (tanpa framework, tanpa Livewire)
+- Tailwind CSS + Vite (resources/css/app.css, resources/js/app.js); jalankan
+  `npm install` sekali, lalu `npm run dev` saat kerja atau `npm run build` untuk demo
+- JavaScript murni (tanpa framework, tanpa Livewire); modul suara di resources/js/voice/
 - Web Speech API: SpeechRecognition (lang "id-ID") dan SpeechSynthesis
 - Auth session buatan sendiri (JANGAN pakai Breeze/Jetstream), middleware role
 

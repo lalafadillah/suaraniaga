@@ -210,7 +210,7 @@ class ContractSmokeTest extends TestCase
             'price' => 15000,
             'description' => 'Kue cubit lembut',
             'audio_description' => 'Kue cubit lembut wangi mentega',
-        ])->assertRedirect(route('penjual.produk'));
+        ])->assertRedirect(route('seller.dashboard'));
 
         $this->assertDatabaseHas('products', ['name' => 'Kue Cubit', 'seller_id' => $seller->id]);
 
