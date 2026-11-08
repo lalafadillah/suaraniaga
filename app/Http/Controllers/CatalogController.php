@@ -8,10 +8,23 @@ use Illuminate\View\View;
 
 class CatalogController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $q = trim((string) $request->query('q', ''));
+
+        if ($q !== '') {
+            return $this->halaman('cari', [
+                'title' => 'Cari Produk',
+                'mobileTitle' => 'Cari produk',
+                'context' => 'Pencarian produk • Input suara dan teks',
+                'active' => 'cari',
+                'produk' => Katalog::cari($q),
+            ]);
+        }
+
         return $this->halaman('beranda', [
             'title' => 'Beranda',
+            'mobileTitle' => 'SuaraNiaga',
             'context' => 'Beranda pembeli • Fokus pada satu tindakan utama',
             'active' => 'beranda',
         ]);
