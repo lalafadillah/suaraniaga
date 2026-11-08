@@ -1,0 +1,144 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class ContractSmokeTest extends TestCase
+{
+    use RefreshDatabase;
+
+    private int $sequence = 0;
+
+    private function seller(): User
+    {
+        return User::create([
+            'name' => 'Sari',
+            'email' => 'sari+'.(++$this->sequence).'@example.com',
+            'password' => 'rahasia123',
+            'role' => User::ROLE_SELLER,
+        ]);
+    }
+
+    private function buyer(): User
+    {
+        return User::create([
+            'name' => 'Budi',
+            'email' => 'budi+'.(++$this->sequence).'@example.com',
+            'password' => 'rahasia123',
+            'role' => User::ROLE_BUYER,
+        ]);
+    }
+
+    private function product(User $seller): Product
+    {
+        return Product::create([
+            'seller_id' => $seller->id,
+            'name' => 'Kue Lapis',
+            'price' => 10000,
+            'description' => 'Kue lapis multilayer',
+            'audio_description' => 'Kue lapis dengan lapisan tipis dan manis',
+        ]);
+    }
+
+    public function test_katalog_dan_detail_produk_tampil(): void
+    {
+        $product = $this->product($this->seller());
+
+        $this->get('/')->assertOk();
+        $this->get('/products/'.$product->id)->assertOk();
+        $this->get('/?q=kue')->assertOk();
+    }
+
+    public function test_pendaftaran_dan_masuk_membuat_sesi(): void
+    {
+        $this->post('/register', [
+            'name' => 'Dina',
+            'email' => 'dina@example.com',
+            'password' => 'rahasia123',
+            'password_confirmation' => 'rahasia123',
+        ])->assertRedirect();
+
+        $this->assertDatabaseHas('users', ['email' => 'dina@example.com', 'role' => 'buyer']);
+
+        $this->post('/login', [
+            'email' => 'dina@example.com',
+            'password' => 'rahasia123',
+        ])->assertRedirect();
+
+        $this->post('/logout')->assertRedirect();
+    }
+
+    public function test_pemesanan_membuat_order_dan_konfirmasi(): void
+    {
+        $product = $this->product($this->seller());
+        $buyer = $this->buyer();
+
+        $response = $this->actingAs($buyer)->post('/products/'.$product->id.'/order');
+
+        $order = Order::first();
+
+        $this->assertNotNull($order);
+        $response->assertRedirect('/orders/'.$order->id.'/konfirmasi');
+        $this->assertSame(10000, $order->total_price);
+        $this->assertSame('baru', $order->status);
+
+        $this->actingAs($buyer)->get('/orders/'.$order->id.'/konfirmasi')->assertOk();
+    }
+
+    public function test_halaman_penjual_hanya_untuk_peran_seller(): void
+    {
+        $this->actingAs($this->buyer())->get('/seller/dashboard')->assertForbidden();
+        $this->actingAs($this->seller())->get('/seller/dashboard')->assertOk();
+        $this->actingAs($this->seller())->get('/seller/products/create')->assertOk();
+    }
+
+    public function test_penjual_bisa_menyimpan_produk_dan_mengubah_status_pesanan(): void
+    {
+        $seller = $this->seller();
+        $product = $this->product($seller);
+        $buyer = $this->buyer();
+        $order = Order::create(['buyer_id' => $buyer->id, 'product_id' => $product->id, 'total_price' => $product->price]);
+
+        $this->actingAs($seller)->post('/seller/products', [
+            'name' => 'Kue Cubit',
+            'price' => 15000,
+            'description' => 'Kue cubit lembut',
+            'audio_description' => 'Kue cubit lembut wangi mentega',
+        ])->assertRedirect('/seller/dashboard');
+
+        $this->assertDatabaseHas('products', ['name' => 'Kue Cubit', 'seller_id' => $seller->id]);
+
+        $this->actingAs($seller)
+            ->patch('/seller/orders/'.$order->id.'/status', ['status' => 'diproses'])
+            ->assertRedirect();
+
+        $this->assertSame('diproses', $order->fresh()->status);
+    }
+
+    public function test_api_produk_dan_pesanan_baru_mengikuti_kontrak(): void
+    {
+        $seller = $this->seller();
+        $this->product($seller);
+
+        $response = $this->actingAs($this->buyer())->getJson('/api/products?q=kue');
+
+        $response->assertOk()
+            ->assertJsonPath('count', 1)
+            ->assertJsonPath('products.0.name', 'Kue Lapis')
+            ->assertJsonPath('products.0.price', 10000)
+            ->assertJsonPath('products.0.price_text', 'Rp10.000')
+            ->assertJsonPath('products.0.url', '/products/1');
+
+        $this->actingAs($this->buyer())->getJson('/api/seller/orders/new')->assertForbidden();
+
+        $this->actingAs($seller)->getJson('/api/seller/orders/new?after_id=0')
+            ->assertOk()
+            ->assertJsonPath('latest_id', 0)
+            ->assertJsonPath('orders', []);
+    }
+}
