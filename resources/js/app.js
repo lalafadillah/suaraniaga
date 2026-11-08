@@ -1,5 +1,6 @@
 import Alpine from 'alpinejs';
 import { initNavigasiSuara } from './voice/navigasi.js';
+import { dengarSampaiDiam, tungguSuaraSelesai } from './voice/penadian.js';
 
 /**
  * Mesin suara SuaraNiaga.
@@ -60,6 +61,7 @@ Alpine.store('suara', {
     suarAktif: false,
 
     _recognition: null,
+    _dengar: null,
 
     init() {
         this.supported = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
@@ -145,10 +147,26 @@ Alpine.store('suara', {
     },
 
     stop() {
+        // Alur "dengar sampai diam" punya pengendali sendiri; berhenti berarti
+        // mengirim hasil yang sudah terdengar.
+        if (this._dengar) {
+            const pengendali = this._dengar;
+
+            this._dengar = null;
+            pengendali.final();
+
+            return;
+        }
+
         this._recognition?.stop();
     },
 
     cancel() {
+        if (this._dengar) {
+            this._dengar.batal();
+            this._dengar = null;
+        }
+
         this._recognition?.stop();
         this._recognition = null;
         this.state = 'idle';
@@ -160,7 +178,8 @@ Alpine.store('suara', {
     speak(text, prefs = readPrefs()) {
         if (!this.synthesisSupported) {
             this.error = 'Browser ini tidak mendukung pemutaran suara.';
-            return;
+
+            return Promise.resolve();
         }
 
         window.speechSynthesis.cancel();
@@ -171,27 +190,109 @@ Alpine.store('suara', {
 
         this.suarAktif = true;
 
-        utterance.onstart = () => {
-            this.state = 'speaking';
-        };
+        return new Promise((selesai) => {
+            utterance.onstart = () => {
+                this.state = 'speaking';
+            };
 
-        utterance.onend = () => {
-            this.state = 'idle';
-            this.suarAktif = false;
-        };
+            utterance.onend = () => {
+                this.state = 'idle';
+                this.suarAktif = false;
+                selesai();
+            };
 
-        utterance.onerror = () => {
-            this.state = 'idle';
-            this.suarAktif = false;
-        };
+            utterance.onerror = () => {
+                this.state = 'idle';
+                this.suarAktif = false;
+                selesai();
+            };
 
-        window.speechSynthesis.speak(utterance);
+            window.speechSynthesis.speak(utterance);
+        });
     },
 
     stopSpeaking() {
         window.speechSynthesis.cancel();
         this.state = 'idle';
         this.suarAktif = false;
+    },
+
+    /**
+     * Isi satu kolom isian dengan suara: tunggu pidato yang sedang berjalan
+     * selesai, dengarkan mikrofon, lalu berhenti otomatis setelah pengguna
+     * diam dua detik. Hasil diletakkan di kolom isian dan dibacakan ulang
+     * sebagai konfirmasi.
+     *
+     * @param {object} opsi
+     * @param {string} [opsi.label]  Nama kolom, dipakai untuk konfirmasi suara.
+     * @param {(hasil: string) => void} [opsi.onHasil]
+     * @param {number} [opsi.diamMs]  Lama diam yang dianggap selesai.
+     * @param {boolean} [opsi.bicara]  Bacakan konfirmasi hasil (bawaan: ya).
+     */
+    async dengarSampaiDiam({ label = '', onHasil = null, diamMs = 2000, bicara = true } = {}) {
+        if (!this.supported) {
+            this.error = 'Mikrofon tidak didukung browser ini. Gunakan kolom input teks.';
+
+            return;
+        }
+
+        this.cancel();
+        this.error = '';
+        this.state = 'menunggu';
+
+        // Mikrofon harus dibuka setelah pidato selesai, supaya suara pidato
+        // tidak ikut tertangkap sebagai input pengguna.
+        await tungguSuaraSelesai(window.speechSynthesis);
+
+        this.state = 'listening';
+
+        this._dengar = dengarSampaiDiam({
+            diamMs,
+            onUcap: (teks) => {
+                this.transcript = teks;
+                this.interim = '';
+            },
+            onHasil: (hasil) => {
+                this._dengar = null;
+                this.transcript = hasil;
+                this.interim = '';
+                this.state = 'idle';
+
+                if (hasil === '') {
+                    this.error = 'Tidak ada suara yang terdengar. Ketik manual bila perlu.';
+                    this.umumkan(this.error);
+
+                    return;
+                }
+
+                if (onHasil) {
+                    onHasil(hasil);
+                }
+
+                if (!bicara) {
+                    return;
+                }
+
+                const pesan = label !== '' ? `${label}: ${hasil}` : `Hasil input: ${hasil}`;
+
+                this.umumkan(pesan);
+            },
+            onGalat: (pesan) => {
+                this._dengar = null;
+                this.state = 'idle';
+                this.error = pesan;
+                this.umumkan(pesan);
+            },
+        });
+    },
+
+    /**
+     * Umumkan lewat pembaca layar dan suara pidato.
+     */
+    umumkan(pesan) {
+        Alpine.store('announcer')?.say(pesan);
+
+        return this.speak(pesan);
     },
 });
 
@@ -246,7 +347,13 @@ initNavigasiSuara({
     modeServer: () => document.documentElement.dataset.modeAksesibilitas === '1',
     prefs: () => Alpine.store('prefs').values,
     laju: () => Alpine.store('prefs').speechRate,
-    suarAktif: () => Alpine.store('suara').suarAktif,
+    // Saat mikrofon terbuka, pembacaan otomatis harus berhenti supaya tidak
+    // bicara di atas suara pengguna.
+    suarAktif: () => {
+        const suara = Alpine.store('suara');
+
+        return suara.suarAktif || suara.state === 'listening' || suara.state === 'menunggu';
+    },
 });
 
 /**

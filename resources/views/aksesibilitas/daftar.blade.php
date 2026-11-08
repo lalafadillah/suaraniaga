@@ -40,12 +40,14 @@
             <fieldset x-data="{ peran: '{{ old('role', '') }}' }}">
                 <legend class="text-[28px] font-bold text-ink">{{ $sumber['label'] }}</legend>
 
+                {{-- tabindex="0" membuat kedua pilihan jadi target Tab sendiri,
+                     bukan satu grup radio yang hanya punya satu titik masuk. --}}
                 <div class="mt-4 flex flex-col gap-[23px]">
                     <label :class="peran === 'buyer'
                             ? 'border-[5px] border-accent bg-brand text-white'
                             : 'border-2 border-brand bg-brand text-white'"
                            class="flex min-h-[100px] cursor-pointer items-center gap-5 rounded-[14px] px-8 text-[25px] font-semibold">
-                        <input type="radio" name="role" value="buyer" x-model="peran" class="h-7 w-7" required>
+                        <input type="radio" name="role" value="buyer" id="peran-pembeli" x-model="peran" tabindex="0" class="h-9 w-9 shrink-0" required>
                         Pembeli
                     </label>
 
@@ -53,7 +55,7 @@
                             ? 'border-[5px] border-accent bg-brand text-white'
                             : 'border-2 border-brand bg-brand text-white'"
                            class="flex min-h-[100px] cursor-pointer items-center gap-5 rounded-[14px] px-8 text-[25px] font-semibold">
-                        <input type="radio" name="role" value="seller" x-model="peran" class="h-7 w-7" required>
+                        <input type="radio" name="role" value="seller" id="peran-penjual" x-model="peran" tabindex="0" class="h-9 w-9 shrink-0" required>
                         Penjual
                     </label>
                 </div>

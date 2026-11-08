@@ -6,6 +6,11 @@
         description="Informasi penjualan dan pesanan ditampilkan tanpa grafik yang ramai."
     />
 
+    <div class="mb-6 flex flex-wrap gap-3">
+        <x-btn href="{{ route('penjual.produk.tambah') }}">Tambah produk dengan suara</x-btn>
+        <x-btn href="{{ route('akun') }}" variant="outline">Profil dan keluar</x-btn>
+    </div>
+
     @if (session('status'))
         <p role="status" class="mb-6 rounded-card border border-line bg-surface px-5 py-4 text-[15px] text-ink">
             {{ session('status') }}

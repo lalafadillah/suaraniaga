@@ -38,9 +38,24 @@
                     {{ $terisi['description'] ?? '-' }}
                 </p>
             @else
-                <p class="mt-3 text-[20px] text-muted">Hasil suara: {{ $nilai !== '' ? $nilai : 'Belum ada hasil' }}</p>
+                <p class="mt-3 text-[20px] text-muted" x-text="nilai !== '' ? 'Hasil suara: ' + nilai : 'Belum ada hasil'">
+                    {{ $nilai !== '' ? 'Hasil suara: '.$nilai : 'Belum ada hasil' }}
+                </p>
             @endif
         </section>
+
+        <p class="mt-6 text-[20px] font-medium text-brand"
+           role="status"
+           aria-live="polite"
+           x-text="$store.suara.state === 'menunggu'
+               ? 'Menunggu pidato yang sedang dibacakan selesai.'
+               : ($store.suara.state === 'listening'
+                   ? 'Mendengarkan. Bicara sekarang, lalu diam selama dua detik.'
+                   : '')"></p>
+
+        <p class="mt-2 text-[20px] font-medium text-danger"
+           x-show="$store.suara.error !== ''"
+           x-text="$store.suara.error"></p>
 
         <x-aks.pesan class="mt-6" />
 
@@ -74,7 +89,11 @@
                     <div>
                         <x-aks.tombol varian="b"
                                      type="button"
-                                     x-on:click="$store.suara.start((hasil) => { nilai = hasil; })">
+                                     x-bind:disabled="$store.suara.state === 'listening' || $store.suara.state === 'menunggu'"
+                                     x-on:click="$store.suara.dengarSampaiDiam({
+                                         label: @js($sumber['label']),
+                                         onHasil: (hasil) => { nilai = hasil; },
+                                     })">
                             Mulai dengarkan
                         </x-aks.tombol>
                         <p class="mt-2 text-[12px] text-muted">Enter = mulai dengarkan</p>
@@ -94,7 +113,7 @@
                         <x-aks.tombol varian="b"
                                      warna="sekunder"
                                      type="button"
-                                     x-on:click='$store.suara.speak(@js((string) $nilai))'>
+                                     x-on:click="$store.suara.speak(nilai !== '' ? nilai : 'Belum ada hasil')">
                             Dengarkan hasil input
                         </x-aks.tombol>
                         <p class="mt-2 text-[12px] text-muted">Enter = dengarkan hasil input</p>

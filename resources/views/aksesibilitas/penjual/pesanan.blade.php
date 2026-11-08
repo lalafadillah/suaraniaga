@@ -25,7 +25,11 @@
         </div>
     @else
         @php
-            $ringkasan = 'Pesanan '.$pesananAktif->nomor.'. Produk '.$pesananAktif->product?->name
+            $pembeli = $pesananAktif->buyer?->name ?? 'Pembeli';
+            $penerima = $pesananAktif->recipient_name ?: $pembeli;
+            $ringkasan = 'Pesanan '.$pesananAktif->nomor.'. Pembeli '.$pembeli
+                .'. Penerima '.$penerima
+                .'. Produk '.$pesananAktif->product?->name
                 .'. Jumlah '.$pesananAktif->quantity.'. Total '.$pesananAktif->total_text
                 .'. Status '.$pesananAktif->status_label.'.';
         @endphp
@@ -39,6 +43,8 @@
                 Pesanan #{{ $pesananAktif->nomor }}
             </h2>
 
+            <p class="mt-3 text-[21px] text-ink">Pembeli: {{ $pembeli }}</p>
+            <p class="mt-1 text-[21px] text-ink">Penerima: {{ $penerima }}</p>
             <p class="mt-3 text-[21px] text-ink">Produk: {{ $pesananAktif->product?->name }}</p>
             <p class="mt-1 text-[21px] text-ink">Jumlah: {{ $pesananAktif->quantity }} produk</p>
             <p class="mt-1 text-[21px] text-ink">

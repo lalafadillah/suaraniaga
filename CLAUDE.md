@@ -40,6 +40,32 @@ Peran admin tidak bisa dipilih saat pendaftaran publik; akun admin dibuat dengan
   Tombol hanya-ikon wajib aria-label.
 - Setiap fitur suara WAJIB punya alternatif ketik biasa dan tidak boleh error bila
   SpeechRecognition tidak didukung
+- Alpine hanya menginisialisasi elemen yang punya `x-data` sebagai akar. Layout
+  aksesibilitas (resources/views/layouts/aksesibilitas.blade.php) dan layout auth
+  (resources/views/layouts/auth.blade.php) jadi punya `x-data` pada pembungkus
+  halaman. Tanpa itu semua `x-on`, `x-model`, dan `x-bind` di halaman itu mati
+  karena tidak punya akar Alpine.
+- Pilihan peran (radio) harus bisa-eachili dicapai dengan Tab, jadi setiap
+  input radio memakai `tabindex="0"`, bukan satu grup radio dengan satu titik masuk.
+
+## Rute pembeli: katalog, keranjang, checkout, pesanan
+Semua memakai sesi buatan sendiri dan middleware `auth` + `role:buyer`.
+- GET /daftar-produk (produk.daftar): katalog; di Mode Aksesibilitas satu
+  produk per halaman dengan tombol Dengarkan deskripsi, Masukkan ke keranjang,
+  Beli produk, dan Kembali ke beranda
+- GET /keranjang (keranjang): isi keranjang session, satu produk per halaman
+- POST /keranjang/{produk} (keranjang.tambah): menambah barang, kembali ke
+  /keranjang
+- PATCH /keranjang/{produk} (keranjang.ubah) dan DELETE /keranjang/{produk}
+  (keranjang.hapus): ubah jumlah dan hapus barang
+- POST /produk/{produk}/beli (produk.beli): beli langsung, produk masuk
+  keranjang lalu pembeli langsung diarahkan ke /checkout
+- GET /checkout (checkout) dan POST /checkout (checkout.proses): isi alamat,
+  konfirmasi, membuat satu pesanan per barang lalu ke /pesanan/berhasil
+- GET /pesanan (pesanan) dan GET /pesanan/berhasil (pesanan.sukses): pesanan
+  milik pembeli yang sedang masuk
+- GET /penjual/pesanan (penjual.pesanan): antrean pesanan milik toko penjual
+  yang sedang masuk, lengkap dengan nama pembeli dan penerima
 
 ## Rute admin (backend)
 Semua di dalam middleware `auth` + `role:admin`. Peran lain mendapat 403 dengan

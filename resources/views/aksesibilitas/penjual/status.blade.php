@@ -7,12 +7,18 @@
         $halaman = max(1, (int) ($halaman ?? 1));
         $pesananAktif = $daftar->get($halaman - 1);
         $sebelumnya = $halaman > 1 ? route('penjual.status', ['halaman' => $halaman - 1]) : null;
+        $berikutnya = $halaman < $jumlahPesanan ? route('penjual.status', ['halaman' => $halaman + 1]) : null;
     @endphp
 
     <h1 class="text-[42px] font-semibold leading-tight text-ink">Status pesanan</h1>
     <p class="mt-3 text-[18px] leading-snug text-muted">
         Perbarui perkembangan pesanan agar pembeli dapat mendengarkan status terbarunya.
     </p>
+
+    <div class="mt-8">
+        <x-aks.tombol varian="b" warna="sekunder" href="{{ route('penjual.dashboard') }}">Kembali ke ringkasan toko</x-aks.tombol>
+        <p class="mt-2 text-[12px] text-muted">Enter = kembali ke ringkasan toko</p>
+    </div>
 
     @if ($jumlahPesanan === 0)
         <p class="mt-10 rounded-[16px] border border-line-strong bg-white p-[32px] text-[24px] text-ink">
@@ -24,19 +30,25 @@
         </div>
     @else
         @php
+            $pembeli = $pesananAktif->buyer?->name ?? 'Pembeli';
+            $penerima = $pesananAktif->recipient_name ?: $pembeli;
             $ringkasan = 'Pesanan '.$pesananAktif->nomor.'. Produk '.$pesananAktif->product?->name
-                .'. Pembeli '.$pesananAktif->recipient_name.'. Status saat ini '.$pesananAktif->status_label
+                .'. Pembeli '.$pembeli.'. Penerima '.$penerima
+                .'. Status saat ini '.$pesananAktif->status_label
                 .'. Total '.$pesananAktif->total_text.'.';
         @endphp
 
         <section class="mt-10 rounded-[16px] border border-line-strong bg-white p-[32px]">
-            <p class="text-[15px] font-semibold text-brand">PESANAN #{{ $pesananAktif->nomor }}</p>
+            <p class="text-[15px] font-semibold text-brand">
+                PESANAN {{ $halaman }} DARI {{ $jumlahPesanan }} &bull; #{{ $pesananAktif->nomor }}
+            </p>
 
             <h2 class="mt-3 text-[25px] font-semibold text-ink">
                 {{ $pesananAktif->product?->name }} &bull; {{ $pesananAktif->quantity }} produk
             </h2>
 
-            <p class="mt-3 text-[19px] text-ink">Pembeli: {{ $pesananAktif->recipient_name }}</p>
+            <p class="mt-3 text-[19px] text-ink">Pembeli: {{ $pembeli }}</p>
+            <p class="mt-1 text-[19px] text-ink">Penerima: {{ $penerima }}</p>
 
             <p class="mt-1 text-[22px] font-semibold text-accent">
                 Status saat ini: {{ $pesananAktif->status_label }}
@@ -66,6 +78,13 @@
                 <div>
                     <x-aks.tombol varian="b" warna="sekunder" :href="$sebelumnya">Lihat pesanan sebelumnya</x-aks.tombol>
                     <p class="mt-2 text-[12px] text-muted">Enter = lihat pesanan sebelumnya</p>
+                </div>
+            @endif
+
+            @if ($berikutnya)
+                <div>
+                    <x-aks.tombol varian="b" warna="sekunder" :href="$berikutnya">Lihat pesanan berikutnya</x-aks.tombol>
+                    <p class="mt-2 text-[12px] text-muted">Enter = lihat pesanan berikutnya</p>
                 </div>
             @endif
         </div>

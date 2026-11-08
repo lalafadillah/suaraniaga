@@ -68,6 +68,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/keranjang/{produk}', [KeranjangController::class, 'store'])->name('keranjang.tambah');
         Route::patch('/keranjang/{produk}', [KeranjangController::class, 'update'])->name('keranjang.ubah');
         Route::delete('/keranjang/{produk}', [KeranjangController::class, 'destroy'])->name('keranjang.hapus');
+        Route::post('/produk/{produk}/beli', [KeranjangController::class, 'beli'])->name('produk.beli');
 
         Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
         Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.proses');

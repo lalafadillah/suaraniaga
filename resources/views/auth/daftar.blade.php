@@ -49,6 +49,7 @@
                 <div class="mt-3 flex flex-wrap gap-3">
                     <label class="flex min-h-[54px] flex-1 cursor-pointer items-center gap-3 rounded-[10px] border border-line-strong bg-surface px-4 has-[:checked]:border-brand has-[:checked]:bg-brand-soft">
                         <input type="radio" name="role" value="buyer" class="h-5 w-5 accent-brand"
+                               tabindex="0"
                                @checked(old('role', 'buyer') === 'buyer')
                                aria-describedby="peran-hint">
                         <span class="text-[15px] font-medium text-ink">Pembeli</span>
@@ -56,6 +57,7 @@
 
                     <label class="flex min-h-[54px] flex-1 cursor-pointer items-center gap-3 rounded-[10px] border border-line-strong bg-surface px-4 has-[:checked]:border-brand has-[:checked]:bg-brand-soft">
                         <input type="radio" name="role" value="seller" class="h-5 w-5 accent-brand"
+                               tabindex="0"
                                @checked(old('role') === 'seller')
                                aria-describedby="peran-hint">
                         <span class="text-[15px] font-medium text-ink">Penjual</span>

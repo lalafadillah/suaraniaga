@@ -2,7 +2,8 @@
 
 @section('content')
     @php
-        $pemain = auth()->check();
+        $pengguna = auth()->user();
+        $pembeli = $pengguna !== null && $pengguna->role === \App\Models\User::ROLE_BUYER;
         $harga = \App\Support\Rupiah::format($produk['harga']);
         $stok = (int) $produk['stok'];
         $deskripsi = (string) $produk['deskripsi'];
@@ -11,6 +12,8 @@
 
     <h1 class="text-[40px] font-bold leading-tight text-ink">{{ $judul }}</h1>
     <p class="mt-3 text-[22px] leading-snug text-muted">{{ $instruksi }}</p>
+
+    <x-aks.pesan class="mt-8" />
 
     @if (! $produk)
         <p class="mt-10 rounded-[24px] border-2 border-line-strong bg-white p-[36px] text-[24px] text-ink">
@@ -41,6 +44,11 @@
 
     <div class="mt-8 flex flex-col gap-[18px] xl:flex-row xl:items-start xl:justify-between">
         <div class="flex flex-col gap-[18px] xl:flex-row xl:items-start">
+            <div>
+                <x-aks.tombol warna="redup" href="{{ route('beranda') }}">Kembali ke beranda</x-aks.tombol>
+                <p class="mt-2 text-[12px] text-muted">Enter = kembali ke beranda</p>
+            </div>
+
             @if ($sebelumnya)
                 <div>
                     <x-aks.tombol warna="redup" :href="$sebelumnya">Sebelumnya</x-aks.tombol>
@@ -57,29 +65,38 @@
                 <p class="mt-2 text-[12px] text-muted">Enter = putar deskripsi</p>
             </div>
 
-            <div>
-                @if ($pemain)
+            @if ($pembeli)
+                <div>
                     <form method="POST" action="{{ route('keranjang.tambah', $produk['id']) }}" class="contents">
                         @csrf
                         <x-aks.tombol type="submit">Masukkan ke keranjang</x-aks.tombol>
                     </form>
-                @else
-                    <x-aks.tombol href="{{ route('login.masuk') }}">Masukkan ke keranjang</x-aks.tombol>
-                @endif
-                <p class="mt-2 text-[12px] text-muted">Enter = tambah ke keranjang</p>
-            </div>
+                    <p class="mt-2 text-[12px] text-muted">Enter = tambah ke keranjang</p>
+                </div>
 
-            <div>
-                @if ($pemain)
-                    <form method="POST" action="{{ route('products.order', $produk['id']) }}" class="contents">
+                <div>
+                    <form method="POST" action="{{ route('produk.beli', $produk['id']) }}" class="contents">
                         @csrf
                         <x-aks.tombol type="submit" warna="sukses">Beli produk</x-aks.tombol>
                     </form>
-                @else
+                    <p class="mt-2 text-[12px] text-muted">Enter = beli dan lanjut ke checkout</p>
+                </div>
+            @elseif ($pengguna)
+                <div>
+                    <x-aks.tombol warna="sukses" href="{{ route('profil') }}">Akun Anda bukan akun pembeli</x-aks.tombol>
+                    <p class="mt-2 text-[12px] text-muted">Keranjang dan checkout hanya untuk akun pembeli</p>
+                </div>
+            @else
+                <div>
+                    <x-aks.tombol href="{{ route('login.masuk') }}">Masukkan ke keranjang</x-aks.tombol>
+                    <p class="mt-2 text-[12px] text-muted">Enter = masuk dulu sebagai pembeli</p>
+                </div>
+
+                <div>
                     <x-aks.tombol warna="sukses" href="{{ route('login.masuk') }}">Beli produk</x-aks.tombol>
-                @endif
-                <p class="mt-2 text-[12px] text-muted">Enter = beli sekarang</p>
-            </div>
+                    <p class="mt-2 text-[12px] text-muted">Enter = masuk dulu sebagai pembeli</p>
+                </div>
+            @endif
         </div>
 
         @if ($berikutnya)

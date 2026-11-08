@@ -15,6 +15,7 @@
             ['key' => 'tambah', 'label' => 'Tambah Produk', 'route' => 'penjual.produk.tambah'],
             ['key' => 'pesanan-masuk', 'label' => 'Pesanan Masuk', 'route' => 'penjual.pesanan'],
             ['key' => 'toko', 'label' => 'Toko Saya', 'route' => 'penjual.toko'],
+            ['key' => 'profil', 'label' => 'Profil dan Keluar', 'route' => 'akun'],
             ['key' => 'pengaturan', 'label' => 'Pengaturan Aksesibilitas', 'route' => 'pengaturan'],
         ],
         default => [

@@ -14,10 +14,10 @@
         Periksa alamat dan ringkasan belanja sebelum membuat pesanan.
     </p>
 
+    <x-aks.pesan class="mt-8" />
+
     <form method="POST" action="{{ route('checkout.proses') }}" class="mt-10" data-form-siap>
         @csrf
-
-        <x-aks.pesan />
 
         <div class="grid gap-6 lg:grid-cols-2">
             <section class="rounded-[14px] border border-line bg-white p-[28px]">

@@ -35,7 +35,7 @@
         </header>
 
         <main id="konten-utama" tabindex="-1" class="flex-1 px-[22px] py-8 lg:py-14">
-            <div class="mx-auto w-full max-w-[520px]">
+            <div class="mx-auto w-full max-w-[520px]" x-data>
                 @yield('content')
             </div>
         </main>

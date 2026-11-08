@@ -65,7 +65,13 @@
         </div>
     </section>
 
+    @php
+        $pengguna = auth()->user();
+        $rumah = $pengguna?->isSeller() ? route('penjual.dashboard') : route('beranda');
+        $labelRumah = $pengguna?->isSeller() ? 'Kembali ke ringkasan toko' : 'Kembali ke beranda';
+    @endphp
+
     <div class="mt-10 flex flex-col gap-[23px]">
-        <x-aks.tombol warna="biru" href="{{ route('beranda') }}">Kembali ke beranda</x-aks.tombol>
+        <x-aks.tombol warna="biru" :href="$rumah">{{ $labelRumah }}</x-aks.tombol>
     </div>
 @endsection

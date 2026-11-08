@@ -16,6 +16,8 @@
         Produk di keranjang ditampilkan satu per satu. Gunakan tombol navigasi untuk memeriksa setiap produk.
     </p>
 
+    <x-aks.pesan class="mt-8" />
+
     @if ($jumlahItem === 0)
         <p class="mt-10 rounded-[24px] border-2 border-line-strong bg-white p-[36px] text-[24px] text-ink">
             Keranjang Anda masih kosong. Kembali ke beranda untuk mencari produk.

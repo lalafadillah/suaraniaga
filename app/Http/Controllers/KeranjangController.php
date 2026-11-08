@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\User;
 use App\Support\ModeAksesibilitas;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -45,7 +46,7 @@ class KeranjangController extends Controller
     public function store(Request $request, Product $produk): RedirectResponse
     {
         if (! $produk->tersedia()) {
-            return back()->withErrors([
+            return redirect()->route('keranjang')->withErrors([
                 'keranjang' => 'Stok '.$produk->name.' sudah habis.',
             ]);
         }
@@ -58,6 +59,34 @@ class KeranjangController extends Controller
 
         return redirect()->route('keranjang')
             ->with('status', $produk->name.' ditambahkan ke keranjang.');
+    }
+
+    /**
+     * Beli sekarang: produk langsung masuk keranjang, pembeli diarahkan ke
+     * halaman checkout untuk mengisi alamat dan mengonfirmasi pesanan.
+     */
+    public function beli(Request $request, Product $produk): RedirectResponse
+    {
+        abort_unless(
+            $request->user()->role === User::ROLE_BUYER,
+            403,
+            'Hanya akun pembeli yang dapat memesan produk.'
+        );
+
+        if (! $produk->tersedia()) {
+            return redirect()->route('keranjang')->withErrors([
+                'keranjang' => 'Stok '.$produk->name.' sudah habis.',
+            ]);
+        }
+
+        $keranjang = $request->session()->get(self::KUNCI_SESI, []);
+        $jumlah = (int) ($keranjang[$produk->id] ?? 0) + 1;
+
+        $keranjang[$produk->id] = min($jumlah, $produk->stock);
+        $request->session()->put(self::KUNCI_SESI, $keranjang);
+
+        return redirect()->route('checkout')
+            ->with('status', $produk->name.' siap dibeli. Periksa alamat pengiriman, lalu konfirmasi pesanan.');
     }
 
     public function update(Request $request, Product $produk): RedirectResponse

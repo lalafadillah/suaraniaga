@@ -15,12 +15,17 @@
         Dengarkan produk satu per satu, lalu pilih tindakan untuk mengelola produk tersebut.
     </p>
 
+    <div class="mt-8">
+        <x-aks.tombol varian="b" warna="sekunder" href="{{ route('penjual.dashboard') }}">Kembali ke ringkasan toko</x-aks.tombol>
+        <p class="mt-2 text-[12px] text-muted">Enter = kembali ke ringkasan toko</p>
+    </div>
+
     @if ($jumlahProduk === 0)
         <p class="mt-10 rounded-[16px] border border-line-strong bg-white p-[32px] text-[24px] text-ink">
             Anda belum memiliki produk. Tambahkan produk pertama Anda.
         </p>
 
-        <div class="mt-8">
+        <div class="mt-8 flex flex-col gap-[18px]">
             <x-aks.tombol varian="b" href="{{ route('penjual.produk.tambah') }}">Tambah produk dengan suara</x-aks.tombol>
         </div>
     @else

@@ -16,5 +16,7 @@
         <x-aks.tombol varian="b" warna="sekunder" href="{{ route('penjual.status') }}">Status pesanan</x-aks.tombol>
 
         <x-aks.tombol varian="b" warna="sekunder" href="{{ route('profil') }}">Profil toko dan keluar</x-aks.tombol>
+
+        <x-aks.tombol varian="b" warna="redup" href="{{ route('logout.konfirmasi') }}">Keluar dari akun</x-aks.tombol>
     </div>
 @endsection

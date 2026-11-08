@@ -19,7 +19,10 @@
     {{-- Live region: pengumuman status tanpa menggandakan suara pembaca layar --}}
     <div aria-live="polite" aria-atomic="true" class="sr-only" x-data x-text="$store.announcer.message"></div>
 
-    <div class="mx-auto flex min-h-screen w-full max-w-[1440px] flex-col px-[22px] py-[40px] sm:px-[48px] lg:px-[96px] lg:py-[70px]">
+    {{-- x-data di pembungkus halaman: Alpine hanya initializes elemen yang
+         punya x-data sebagai akar, jadi seluruh tombol suara dan pilihan
+         peran di halaman ini ikut hidup. --}}
+    <div class="mx-auto flex min-h-screen w-full max-w-[1440px] flex-col px-[22px] py-[40px] sm:px-[48px] lg:px-[96px] lg:py-[70px]" x-data>
         @include('aksesibilitas.partials.kepala')
 
         <main id="konten-utama" tabindex="-1" class="flex-1 pt-[40px] lg:pt-[55px]">

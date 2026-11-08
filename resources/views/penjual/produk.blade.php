@@ -7,7 +7,10 @@
             description="Daftar produk aktif beserta harga, stok, dan statusnya."
         />
 
-        <x-btn href="{{ route('penjual.produk.tambah') }}" class="shrink-0">Tambah produk dengan suara</x-btn>
+        <div class="flex shrink-0 flex-col items-end gap-3">
+            <x-btn href="{{ route('penjual.produk.tambah') }}">Tambah produk dengan suara</x-btn>
+            <x-btn href="{{ route('penjual.dashboard') }}" variant="outline">Kembali ke ringkasan toko</x-btn>
+        </div>
     </div>
 
     @if (session('status'))
