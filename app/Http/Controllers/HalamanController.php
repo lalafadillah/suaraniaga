@@ -61,15 +61,6 @@ class HalamanController extends Controller
         ]);
     }
 
-    public function profil(): View
-    {
-        return $this->halaman('profil', [
-            'title' => 'Profil',
-            'context' => 'Profil • Data akun dan preferensi',
-            'active' => 'profil',
-        ]);
-    }
-
     public function pengaturan(): View
     {
         return $this->halaman('pengaturan', [

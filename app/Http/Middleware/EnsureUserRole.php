@@ -12,26 +12,34 @@ class EnsureUserRole
     {
         $user = $request->user();
 
-        if ($user === null || ! in_array($user->role, $roles, true)) {
-            abort(403, 'Halaman ini hanya untuk akun '.implode(' atau ', $this->label($roles)).'.');
+        if ($user === null) {
+            return redirect()->route('login');
+        }
+
+        if (! in_array($user->role, $roles, true)) {
+            abort(403, $this->pesan($roles));
         }
 
         return $next($request);
     }
 
     /**
+     * Pesan penolakan sesuai peran yang diminta, ditulis dalam bahasa Indonesia.
+     *
      * @param  array<int, string>  $roles
-     * @return array<int, string>
      */
-    private function label(array $roles): array
+    private function pesan(array $roles): string
     {
-        return array_map(
+        $label = implode(' atau ', array_map(
             fn (string $role) => match ($role) {
                 'buyer' => 'pembeli',
                 'seller' => 'penjual',
+                'admin' => 'admin',
                 default => $role,
             },
             $roles
-        );
+        ));
+
+        return 'Akses ditolak. Halaman ini khusus '.$label.'.';
     }
 }
