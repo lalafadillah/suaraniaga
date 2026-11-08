@@ -11,7 +11,7 @@ use Illuminate\View\View;
 
 class OrderController extends Controller
 {
-    public function store(Request $request, Product $product): RedirectResponse
+    public function store(Request $request, Product $produk): RedirectResponse
     {
         abort_unless(
             $request->user()->role === User::ROLE_BUYER,
@@ -21,9 +21,9 @@ class OrderController extends Controller
 
         $order = Order::create([
             'buyer_id' => $request->user()->id,
-            'product_id' => $product->id,
+            'product_id' => $produk->id,
             'status' => Order::STATUS_BARU,
-            'total_price' => $product->price,
+            'total_price' => $produk->price,
         ]);
 
         return redirect()->route('orders.confirmation', $order);
@@ -39,6 +39,22 @@ class OrderController extends Controller
 
         $order->load('product');
 
-        return view('buyer.orders.confirmation', compact('order'));
+        return $this->halaman('pesanan-berhasil', [
+            'title' => 'Pesanan berhasil',
+            'mobileTitle' => 'Pesanan berhasil',
+            'active' => 'pesanan',
+            'context' => 'Pesanan berhasil dibuat',
+            'order' => $order,
+        ]);
+    }
+
+    public function sukses(): View
+    {
+        return $this->halaman('pesanan-berhasil', [
+            'title' => 'Pesanan berhasil',
+            'mobileTitle' => 'Pesanan berhasil',
+            'active' => 'pesanan',
+            'context' => 'Pesanan berhasil dibuat',
+        ]);
     }
 }

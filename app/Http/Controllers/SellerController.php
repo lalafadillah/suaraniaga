@@ -10,24 +10,54 @@ use Illuminate\View\View;
 
 class SellerController extends Controller
 {
-    public function dashboard(Request $request): View
+    public function dashboard(): View
     {
-        $seller = $request->user();
+        return $this->halaman('penjual.dashboard', [
+            'title' => 'Dashboard Penjual',
+            'mobileTitle' => 'Ringkasan toko',
+            'context' => 'Dashboard penjual • Ringkasan aktivitas toko',
+            'active' => 'ringkasan',
+        ]);
+    }
 
-        $orders = Order::query()
-            ->whereHas('product', fn ($query) => $query->where('seller_id', $seller->id))
-            ->with(['product', 'buyer'])
-            ->latest()
-            ->get();
-
-        $products = $seller->products()->latest()->get();
-
-        return view('seller.dashboard', compact('orders', 'products'));
+    public function produk(): View
+    {
+        return $this->halaman('penjual.produk', [
+            'title' => 'Produk Saya',
+            'mobileTitle' => 'Produk saya',
+            'context' => 'Produk saya • Daftar produk aktif',
+            'active' => 'produk',
+        ]);
     }
 
     public function createProduct(): View
     {
-        return view('seller.products.create');
+        return $this->halaman('penjual.tambah-produk', [
+            'title' => 'Tambah Produk',
+            'mobileTitle' => 'Tambah produk',
+            'context' => 'Tambah produk • Alur input suara bertahap',
+            'active' => 'tambah',
+        ]);
+    }
+
+    public function pesanan(): View
+    {
+        return $this->halaman('penjual.pesanan', [
+            'title' => 'Pesanan Masuk',
+            'mobileTitle' => 'Pesanan masuk',
+            'context' => 'Pesanan masuk • Antrean pesanan toko',
+            'active' => 'pesanan-masuk',
+        ]);
+    }
+
+    public function toko(): View
+    {
+        return $this->halaman('penjual.toko', [
+            'title' => 'Toko Saya',
+            'mobileTitle' => 'Toko saya',
+            'context' => 'Toko saya • Profil toko dan pengiriman',
+            'active' => 'toko',
+        ]);
     }
 
     public function storeProduct(Request $request): RedirectResponse
@@ -49,7 +79,7 @@ class SellerController extends Controller
 
         $request->user()->products()->create($data);
 
-        return redirect()->route('seller.dashboard')
+        return redirect()->route('penjual.produk')
             ->with('status', 'Produk berhasil disimpan.');
     }
 
